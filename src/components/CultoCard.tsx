@@ -6,12 +6,15 @@ interface CultoCardProps {
   id: string;
   title: string;
   date: string;
-  description: string;
-  thumbnail: string;
+  description?: string | null;
+  thumbnail_url?: string | null;
   isFeatured?: boolean;
 }
 
-const CultoCard = ({ id, title, date, description, thumbnail, isFeatured }: CultoCardProps) => {
+const CultoCard = ({ id, title, date, description, thumbnail_url, isFeatured }: CultoCardProps) => {
+  const thumbnail = thumbnail_url || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&h=450&fit=crop";
+  const formattedDate = new Date(date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+
   if (isFeatured) {
     return (
       <div className="relative rounded-2xl overflow-hidden shadow-elevated group">
@@ -35,7 +38,7 @@ const CultoCard = ({ id, title, date, description, thumbnail, isFeatured }: Cult
           <h3 className="font-display text-xl md:text-2xl font-semibold text-primary-foreground mb-2">
             {title}
           </h3>
-          <p className="font-ui text-sm text-primary-foreground/70 mb-4">{date}</p>
+          <p className="font-ui text-sm text-primary-foreground/70 mb-4">{formattedDate}</p>
           <Link to={`/cultos/${id}`}>
             <Button variant="heroOutline" size="default">
               Assistir Agora
@@ -67,8 +70,10 @@ const CultoCard = ({ id, title, date, description, thumbnail, isFeatured }: Cult
         <h3 className="font-display text-base font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
           {title}
         </h3>
-        <p className="font-ui text-sm text-muted-foreground mt-2">{date}</p>
-        <p className="font-body text-sm text-muted-foreground mt-2 line-clamp-2">{description}</p>
+        <p className="font-ui text-sm text-muted-foreground mt-2">{formattedDate}</p>
+        {description && (
+          <p className="font-body text-sm text-muted-foreground mt-2 line-clamp-2">{description}</p>
+        )}
       </div>
     </Link>
   );
