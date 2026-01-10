@@ -14,16 +14,201 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      church_info: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
+      cultos: {
+        Row: {
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          published: boolean | null
+          summary: string | null
+          teachings: string[] | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          video_id: string | null
+          year: number | null
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          description?: string | null
+          id?: string
+          published?: boolean | null
+          summary?: string | null
+          teachings?: string[] | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          video_id?: string | null
+          year?: number | null
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          published?: boolean | null
+          summary?: string | null
+          teachings?: string[] | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          video_id?: string | null
+          year?: number | null
+        }
+        Relationships: []
+      }
+      estudos: {
+        Row: {
+          author: string
+          content: string | null
+          created_at: string
+          date: string
+          excerpt: string | null
+          id: string
+          published: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          content?: string | null
+          created_at?: string
+          date: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          content?: string | null
+          created_at?: string
+          date?: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      schedule: {
+        Row: {
+          created_at: string
+          day: string
+          event: string
+          id: string
+          is_highlight: boolean | null
+          order_index: number | null
+          time: string
+        }
+        Insert: {
+          created_at?: string
+          day: string
+          event: string
+          id?: string
+          is_highlight?: boolean | null
+          order_index?: number | null
+          time: string
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          event?: string
+          id?: string
+          is_highlight?: boolean | null
+          order_index?: number | null
+          time?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "editor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +335,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "editor"],
+    },
   },
 } as const
