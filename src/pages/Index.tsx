@@ -7,6 +7,7 @@ import QuickAccessCard from "@/components/QuickAccessCard";
 import ScheduleItem from "@/components/ScheduleItem";
 import CultoCard from "@/components/CultoCard";
 import SectionTitle from "@/components/SectionTitle";
+import { useRecentCultos, useSchedule } from "@/hooks/useChurchData";
 import heroImage from "@/assets/hero-church.jpg";
 
 const quickAccessItems = [
@@ -36,38 +37,10 @@ const quickAccessItems = [
   },
 ];
 
-const schedule = [
-  { day: "DOM", time: "09:00", event: "Culto da Manhã" },
-  { day: "DOM", time: "19:00", event: "Culto da Noite", isHighlight: true },
-  { day: "QUA", time: "19:30", event: "Estudo Bíblico" },
-  { day: "SEX", time: "20:00", event: "Culto de Oração" },
-];
-
-const recentCultos = [
-  {
-    id: "1",
-    title: "A Fé que Vence o Mundo",
-    date: "05 de Janeiro de 2025",
-    description: "Uma mensagem poderosa sobre a fé que nos sustenta em tempos difíceis.",
-    thumbnail: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&h=450&fit=crop",
-  },
-  {
-    id: "2",
-    title: "O Poder da Oração",
-    date: "29 de Dezembro de 2024",
-    description: "Descubra como a oração transforma vidas e aproxima de Deus.",
-    thumbnail: "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&h=450&fit=crop",
-  },
-  {
-    id: "3",
-    title: "Caminhos de Esperança",
-    date: "22 de Dezembro de 2024",
-    description: "A esperança cristã em meio às tribulações do mundo.",
-    thumbnail: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=800&h=450&fit=crop",
-  },
-];
-
 const Index = () => {
+  const { data: schedule = [] } = useSchedule();
+  const { data: recentCultos = [] } = useRecentCultos(3);
+  const featuredCulto = recentCultos[0];
   return (
     <div className="min-h-screen bg-background">
       <Header />
