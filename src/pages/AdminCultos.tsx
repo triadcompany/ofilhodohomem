@@ -338,8 +338,14 @@ const AdminCultos = () => {
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button type="submit" variant="gold">
-                {editingCulto ? "Salvar" : "Criar"}
+              <Button 
+                type="submit" 
+                variant="gold"
+                disabled={createMutation.isPending || updateMutation.isPending}
+              >
+                {createMutation.isPending || updateMutation.isPending 
+                  ? "Salvando..." 
+                  : editingCulto ? "Salvar" : "Criar"}
               </Button>
             </div>
           </form>
