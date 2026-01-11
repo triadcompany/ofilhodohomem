@@ -5,19 +5,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus } from "lucide-react";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { signIn, isAdmin } = useAuth();
+  const [isSignUp, setIsSignUp] = useState(false);
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (isSignUp) {
+      const { error } = await signUp(email, password);
+      if (error) {
+        toast.error("Erro ao criar conta: " + error.message);
+        setLoading(false);
+        return;
+      }
+      toast.success("Conta criada com sucesso! Faça login para continuar.");
+      setIsSignUp(false);
+      setLoading(false);
+      return;
+    }
 
     const { error } = await signIn(email, password);
 
@@ -51,7 +65,7 @@ const AdminLogin = () => {
               Área Administrativa
             </h1>
             <p className="font-body text-muted-foreground mt-2">
-              Faça login para gerenciar o conteúdo
+              {isSignUp ? "Crie sua conta para começar" : "Faça login para gerenciar o conteúdo"}
             </p>
           </div>
 
@@ -80,6 +94,7 @@ const AdminLogin = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  minLength={6}
                   className="font-ui pr-10"
                 />
                 <button
@@ -100,7 +115,12 @@ const AdminLogin = () => {
               disabled={loading}
             >
               {loading ? (
-                "Entrando..."
+                isSignUp ? "Criando conta..." : "Entrando..."
+              ) : isSignUp ? (
+                <>
+                  <UserPlus className="w-4 h-4" />
+                  Criar Conta
+                </>
               ) : (
                 <>
                   <LogIn className="w-4 h-4" />
@@ -110,8 +130,19 @@ const AdminLogin = () => {
             </Button>
           </form>
 
-          {/* Back link */}
+          {/* Toggle Sign Up / Sign In */}
           <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="font-ui text-sm text-accent hover:text-accent/80 transition-colors"
+            >
+              {isSignUp ? "Já tem conta? Faça login" : "Não tem conta? Criar conta"}
+            </button>
+          </div>
+
+          {/* Back link */}
+          <div className="mt-4 text-center">
             <Link
               to="/"
               className="font-ui text-sm text-muted-foreground hover:text-accent transition-colors"
