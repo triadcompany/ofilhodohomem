@@ -123,9 +123,9 @@ const Index = () => {
               <CultoCard
                 id="1"
                 title="A Fé que Vence o Mundo"
-                date="05 de Janeiro de 2025"
+                date="2025-01-05"
                 description="Uma mensagem poderosa sobre a fé que nos sustenta em tempos difíceis e nos leva à vitória em Cristo."
-                thumbnail="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1200&h=675&fit=crop"
+                thumbnail_url="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1200&h=675&fit=crop"
                 isFeatured
               />
             </div>
