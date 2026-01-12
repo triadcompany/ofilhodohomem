@@ -7,13 +7,36 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Video, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Video } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
+// Extrai o ID do vídeo de uma URL do YouTube
+const extractYouTubeId = (url: string): string => {
+  if (!url) return "";
+  
+  // Se já for apenas o ID (11 caracteres alfanuméricos)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
+    return url;
+  }
+  
+  // Padrões de URL do YouTube
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  
+  return url; // Retorna o valor original se não encontrar padrão
+};
 
 interface Culto {
   id: string;
@@ -117,12 +140,16 @@ const AdminCultos = () => {
 
   const handleEdit = (culto: Culto) => {
     setEditingCulto(culto);
+    // Reconstrói a URL completa do YouTube se houver video_id
+    const videoUrl = culto.video_id 
+      ? `https://www.youtube.com/watch?v=${culto.video_id}` 
+      : "";
     setFormData({
       title: culto.title,
       date: culto.date,
       description: culto.description || "",
       summary: culto.summary || "",
-      video_id: culto.video_id || "",
+      video_id: videoUrl,
       thumbnail_url: culto.thumbnail_url || "",
       teachings: culto.teachings?.join("\n") || "",
       published: culto.published ?? true,
@@ -133,12 +160,15 @@ const AdminCultos = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Extrai o ID do vídeo da URL
+    const videoId = extractYouTubeId(formData.video_id);
+    
     const data = {
       title: formData.title,
       date: formData.date,
       description: formData.description || null,
       summary: formData.summary || null,
-      video_id: formData.video_id || null,
+      video_id: videoId || null,
       thumbnail_url: formData.thumbnail_url || null,
       teachings: formData.teachings ? formData.teachings.split("\n").filter(Boolean) : null,
       published: formData.published,
@@ -275,12 +305,12 @@ const AdminCultos = () => {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="video_id">ID do Vídeo (YouTube)</Label>
+                <Label htmlFor="video_id">Link do Vídeo (YouTube)</Label>
                 <Input
                   id="video_id"
                   value={formData.video_id}
                   onChange={(e) => setFormData({ ...formData, video_id: e.target.value })}
-                  placeholder="ex: dQw4w9WgXcQ"
+                  placeholder="https://www.youtube.com/watch?v=..."
                 />
               </div>
               <div className="space-y-2">
