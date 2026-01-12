@@ -38,6 +38,12 @@ const extractYouTubeId = (url: string): string => {
   return url; // Retorna o valor original se não encontrar padrão
 };
 
+// Gera a URL da thumbnail do YouTube baseado no ID do vídeo
+const getYouTubeThumbnail = (videoId: string): string => {
+  if (!videoId) return "";
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+};
+
 interface Culto {
   id: string;
   title: string;
@@ -309,12 +315,22 @@ const AdminCultos = () => {
                 <Input
                   id="video_id"
                   value={formData.video_id}
-                  onChange={(e) => setFormData({ ...formData, video_id: e.target.value })}
+                  onChange={(e) => {
+                    const videoUrl = e.target.value;
+                    const videoId = extractYouTubeId(videoUrl);
+                    const thumbnail = videoId ? getYouTubeThumbnail(videoId) : "";
+                    setFormData({ 
+                      ...formData, 
+                      video_id: videoUrl,
+                      // Só preenche a thumbnail automaticamente se estiver vazia
+                      thumbnail_url: formData.thumbnail_url || thumbnail
+                    });
+                  }}
                   placeholder="https://www.youtube.com/watch?v=..."
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="thumbnail_url">URL da Thumbnail</Label>
+                <Label htmlFor="thumbnail_url">URL da Thumbnail (auto-preenchida)</Label>
                 <Input
                   id="thumbnail_url"
                   value={formData.thumbnail_url}
