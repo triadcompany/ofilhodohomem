@@ -340,6 +340,31 @@ const AdminCultos = () => {
               </div>
             </div>
 
+            {/* Thumbnail Preview */}
+            {formData.thumbnail_url && (
+              <div className="space-y-2">
+                <Label>Preview da Thumbnail</Label>
+                <div className="relative w-full max-w-md aspect-video rounded-lg overflow-hidden border border-border bg-muted">
+                  <img
+                    src={formData.thumbnail_url}
+                    alt="Preview da thumbnail"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                    onLoad={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'block';
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-muted/50 pointer-events-none opacity-0 hover:opacity-100 transition-opacity">
+                    <Video className="w-12 h-12 text-muted-foreground" />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="description">Descrição</Label>
               <Textarea
