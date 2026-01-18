@@ -3,90 +3,21 @@ import { ArrowLeft, User, Calendar, Share2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { useEstudo } from "@/hooks/useChurchData";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const estudosData: Record<string, {
-  title: string;
-  author: string;
-  date: string;
-  content: string;
-}> = {
-  "1": {
-    title: "O Sermão do Monte: Bem-Aventuranças",
-    author: "Pastor João Silva",
-    date: "10 de Janeiro de 2025",
-    content: `
-## Introdução
-
-As Bem-Aventuranças representam o coração do ensino de Jesus sobre o caráter daqueles que pertencem ao Reino de Deus. Encontradas em Mateus 5:3-12, estas declarações revolucionárias invertem os valores do mundo e revelam a verdadeira felicidade segundo Deus.
-
-## As Oito Bem-Aventuranças
-
-### 1. Bem-aventurados os pobres de espírito
-"Bem-aventurados os pobres de espírito, porque deles é o Reino dos céus." (v.3)
-
-A pobreza de espírito não se refere à pobreza material, mas à humildade espiritual. É reconhecer nossa completa dependência de Deus e nossa incapacidade de nos salvarmos por nossos próprios méritos.
-
-### 2. Bem-aventurados os que choram
-"Bem-aventurados os que choram, porque serão consolados." (v.4)
-
-Este choro refere-se à tristeza pelo pecado — tanto o nosso quanto o do mundo. Aqueles que se entristecem genuinamente pelo mal serão consolados pela graça restauradora de Deus.
-
-### 3. Bem-aventurados os mansos
-"Bem-aventurados os mansos, porque herdarão a terra." (v.5)
-
-Mansidão não é fraqueza, mas força sob controle. É a capacidade de não retaliar, de confiar a Deus nossa defesa, assim como Jesus fez.
-
-### 4. Bem-aventurados os que têm fome e sede de justiça
-"Bem-aventurados os que têm fome e sede de justiça, porque serão fartos." (v.6)
-
-Um desejo intenso pela justiça de Deus — tanto em nós mesmos quanto no mundo — caracteriza o verdadeiro discípulo.
-
-## Aplicação Prática
-
-Como podemos viver as bem-aventuranças no dia a dia?
-
-1. **Cultive a humildade** através da oração e meditação na Palavra
-2. **Lamente pelo pecado** e busque a santificação
-3. **Pratique a mansidão** em seus relacionamentos
-4. **Busque a justiça** em todas as áreas da vida
-
-## Conclusão
-
-As Bem-Aventuranças não são meros ideais inatingíveis, mas o retrato do caráter que o Espírito Santo desenvolve em nós. À medida que crescemos em Cristo, estas qualidades se tornam cada vez mais evidentes em nossas vidas.
-    `,
-  },
-  "2": {
-    title: "Os Frutos do Espírito Santo",
-    author: "Pastor Maria Santos",
-    date: "03 de Janeiro de 2025",
-    content: `
-## Introdução
-
-O apóstolo Paulo nos apresenta em Gálatas 5:22-23 uma lista de nove características que devem ser evidentes na vida de todo cristão. Estas qualidades são chamadas de "fruto do Espírito" porque são produzidas em nós pelo Espírito Santo.
-
-## O Fruto do Espírito
-
-"Mas o fruto do Espírito é: amor, alegria, paz, longanimidade, benignidade, bondade, fidelidade, mansidão, domínio próprio."
-
-### Amor (Ágape)
-O amor ágape é o amor incondicional, sacrificial, que busca o bem do outro independente de reciprocidade.
-
-### Alegria (Chara)
-Uma alegria profunda que não depende das circunstâncias, mas está enraizada na certeza da salvação.
-
-### Paz (Eirene)
-A paz que excede todo entendimento, fruto da reconciliação com Deus através de Cristo.
-
-## Conclusão
-
-O fruto do Espírito é singular — não "frutos", mas "fruto". Todas estas qualidades formam um todo integrado que manifesta a vida de Cristo em nós.
-    `,
-  },
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 };
 
 const EstudoDetail = () => {
   const { id } = useParams();
-  const estudo = estudosData[id || ""];
+  const { data: estudo, isLoading } = useEstudo(id || "");
 
   const handleShare = () => {
     if (navigator.share) {
@@ -99,6 +30,34 @@ const EstudoDetail = () => {
       alert("Link copiado!");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <section className="pt-24 pb-4 bg-muted/50">
+          <div className="container mx-auto px-4">
+            <Skeleton className="h-5 w-40" />
+          </div>
+        </section>
+        <article className="py-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto">
+              <Skeleton className="h-10 w-3/4 mb-6" />
+              <div className="flex gap-4 mb-12">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-5 w-40" />
+              </div>
+              <Skeleton className="h-6 w-full mb-4" />
+              <Skeleton className="h-6 w-full mb-4" />
+              <Skeleton className="h-6 w-3/4 mb-4" />
+            </div>
+          </div>
+        </article>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!estudo) {
     return (
@@ -149,7 +108,7 @@ const EstudoDetail = () => {
                   </span>
                   <span className="flex items-center gap-2 font-ui text-sm">
                     <Calendar className="w-4 h-4" />
-                    {estudo.date}
+                    {formatDate(estudo.date)}
                   </span>
                 </div>
                 <Button variant="outline" size="sm" onClick={handleShare} className="gap-2">
@@ -161,7 +120,7 @@ const EstudoDetail = () => {
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
-              {estudo.content.split('\n').map((paragraph, index) => {
+              {estudo.content?.split('\n').map((paragraph, index) => {
                 if (paragraph.startsWith('## ')) {
                   return (
                     <h2 key={index} className="font-display text-2xl font-semibold text-foreground mt-10 mb-4">
