@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const navLinks = [
   { name: "Início", path: "/" },
@@ -14,6 +15,7 @@ const navLinks = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { config } = useSiteConfig();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-md shadow-lg">
@@ -22,14 +24,16 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
-              <span className="font-display text-accent-foreground text-lg font-bold">T</span>
+              <span className="font-display text-accent-foreground text-lg font-bold">
+                {config.church_name.charAt(0)}
+              </span>
             </div>
             <div className="hidden sm:block">
               <h1 className="font-display text-primary-foreground text-sm font-semibold tracking-wide">
-                Tabernáculo
+                {config.church_name}
               </h1>
               <p className="font-display text-accent text-xs tracking-wider">
-                O Filho do Homem
+                {config.church_subtitle}
               </p>
             </div>
           </Link>
