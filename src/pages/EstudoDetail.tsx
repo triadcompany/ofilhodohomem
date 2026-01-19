@@ -7,6 +7,7 @@ import { useEstudo } from "@/hooks/useChurchData";
 import { Skeleton } from "@/components/ui/skeleton";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -122,7 +123,7 @@ const EstudoDetail = () => {
 
             {/* Content */}
             <div className="prose prose-lg max-w-none prose-headings:font-display prose-headings:text-foreground prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-p:font-body prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:marker:text-accent prose-blockquote:border-l-accent prose-blockquote:text-muted-foreground prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:bg-muted prose-pre:border prose-pre:border-border">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                 {estudo.content || ""}
               </ReactMarkdown>
             </div>
