@@ -8,7 +8,8 @@ import ScheduleItem from "@/components/ScheduleItem";
 import CultoCard from "@/components/CultoCard";
 import SectionTitle from "@/components/SectionTitle";
 import { useRecentCultos, useSchedule } from "@/hooks/useChurchData";
-import heroImage from "@/assets/hero-church.jpg";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
+import heroImageDefault from "@/assets/hero-church.jpg";
 
 const quickAccessItems = [
   {
@@ -40,7 +41,10 @@ const quickAccessItems = [
 const Index = () => {
   const { data: schedule = [] } = useSchedule();
   const { data: recentCultos = [] } = useRecentCultos(3);
+  const { config } = useSiteConfig();
   const featuredCulto = recentCultos[0];
+  
+  const heroImage = config.hero_image_url || heroImageDefault;
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -60,15 +64,15 @@ const Index = () => {
         <div className="relative container mx-auto px-4 text-center pt-20">
           <div className="animate-fade-in">
             <span className="inline-block font-ui text-xs font-semibold tracking-[0.3em] text-accent uppercase mb-6">
-              Bem-vindo ao
+              {config.hero_welcome_text}
             </span>
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground tracking-wide mb-6">
-              Tabernáculo
-              <span className="block text-accent mt-2">O Filho do Homem</span>
+              {config.hero_title}
+              <span className="block text-accent mt-2">{config.hero_subtitle}</span>
             </h1>
             <p className="font-body text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto italic leading-relaxed mb-10">
-              "Porque o Filho do Homem veio buscar e salvar o que se havia perdido."
-              <span className="block text-sm mt-2 text-accent not-italic">Lucas 19:10</span>
+              "{config.hero_verse}"
+              <span className="block text-sm mt-2 text-accent not-italic">{config.hero_verse_reference}</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/ao-vivo">
