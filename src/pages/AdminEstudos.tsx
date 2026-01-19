@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import MarkdownEditor from "@/components/admin/MarkdownEditor";
 
 interface Estudo {
   id: string;
@@ -230,7 +231,7 @@ const AdminEstudos = () => {
 
       {/* Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-display text-xl">
               {editingEstudo ? "Editar Estudo" : "Novo Estudo"}
@@ -281,13 +282,11 @@ const AdminEstudos = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="content">Conteúdo</Label>
-              <Textarea
-                id="content"
+              <Label>Conteúdo</Label>
+              <MarkdownEditor
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                rows={12}
-                placeholder="Use ## para títulos, ### para subtítulos..."
+                onChange={(value) => setFormData({ ...formData, content: value })}
+                placeholder="Escreva o conteúdo do estudo aqui..."
               />
             </div>
 
