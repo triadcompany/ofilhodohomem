@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { User, Lock, Plus, Globe, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Save, Loader2 } from "lucide-react";
+import { User, Lock, Plus, Globe, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Save, Loader2, Image, Upload, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +31,12 @@ interface SiteConfig {
   facebook_url: string;
   instagram_url: string;
   youtube_url: string;
+  hero_welcome_text: string;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_verse: string;
+  hero_verse_reference: string;
+  hero_image_url: string;
 }
 
 const defaultConfig: SiteConfig = {
@@ -44,6 +50,12 @@ const defaultConfig: SiteConfig = {
   facebook_url: "",
   instagram_url: "",
   youtube_url: "",
+  hero_welcome_text: "Bem-vindo ao",
+  hero_title: "Tabernáculo",
+  hero_subtitle: "O Filho do Homem",
+  hero_verse: "Porque o Filho do Homem veio buscar e salvar o que se havia perdido.",
+  hero_verse_reference: "Lucas 19:10",
+  hero_image_url: "",
 };
 
 const AdminConfiguracoes = () => {
@@ -54,7 +66,9 @@ const AdminConfiguracoes = () => {
   const [loading, setLoading] = useState(false);
   const [savingConfig, setSavingConfig] = useState(false);
   const [loadingConfig, setLoadingConfig] = useState(true);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [siteConfig, setSiteConfig] = useState<SiteConfig>(defaultConfig);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchConfig();
@@ -147,6 +161,54 @@ const AdminConfiguracoes = () => {
     setSiteConfig((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Por favor, selecione uma imagem válida");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("A imagem deve ter no máximo 5MB");
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `hero-${Date.now()}.${fileExt}`;
+      const filePath = `hero/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("site-assets")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("site-assets")
+        .getPublicUrl(filePath);
+
+      updateConfig("hero_image_url", urlData.publicUrl);
+      toast.success("Imagem enviada com sucesso!");
+    } catch (error: any) {
+      toast.error("Erro ao enviar imagem: " + error.message);
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRemoveImage = () => {
+    updateConfig("hero_image_url", "");
+  };
+
   if (loadingConfig) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -228,6 +290,130 @@ const AdminConfiguracoes = () => {
             </div>
           </div>
 
+          {/* Hero Section */}
+          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                <Image className="w-6 h-6 text-accent" />
+              </div>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-foreground">
+                  Seção Hero (Banner Principal)
+                </h2>
+                <p className="font-ui text-sm text-muted-foreground">
+                  Imagem de fundo e textos da página inicial
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {/* Image Upload */}
+              <div className="space-y-2">
+                <Label>Imagem de Fundo</Label>
+                <div className="flex flex-col gap-4">
+                  {siteConfig.hero_image_url ? (
+                    <div className="relative aspect-video max-w-md rounded-lg overflow-hidden border border-border">
+                      <img
+                        src={siteConfig.hero_image_url}
+                        alt="Hero background"
+                        className="w-full h-full object-cover"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={handleRemoveImage}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="aspect-video max-w-md rounded-lg border-2 border-dashed border-border flex items-center justify-center bg-muted/30">
+                      <p className="text-sm text-muted-foreground">Nenhuma imagem selecionada</p>
+                    </div>
+                  )}
+                  <div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="hero-image-upload"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingImage}
+                      className="gap-2"
+                    >
+                      {uploadingImage ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Upload className="w-4 h-4" />
+                      )}
+                      {uploadingImage ? "Enviando..." : "Enviar Imagem"}
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Tamanho recomendado: 1920x1080. Máximo: 5MB
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hero Texts */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="hero_welcome_text">Texto de Boas-vindas</Label>
+                  <Input
+                    id="hero_welcome_text"
+                    value={siteConfig.hero_welcome_text}
+                    onChange={(e) => updateConfig("hero_welcome_text", e.target.value)}
+                    placeholder="Bem-vindo ao"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="hero_title">Título Principal</Label>
+                  <Input
+                    id="hero_title"
+                    value={siteConfig.hero_title}
+                    onChange={(e) => updateConfig("hero_title", e.target.value)}
+                    placeholder="Tabernáculo"
+                  />
+                </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="hero_subtitle">Subtítulo</Label>
+                  <Input
+                    id="hero_subtitle"
+                    value={siteConfig.hero_subtitle}
+                    onChange={(e) => updateConfig("hero_subtitle", e.target.value)}
+                    placeholder="O Filho do Homem"
+                  />
+                </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="hero_verse">Versículo</Label>
+                  <Textarea
+                    id="hero_verse"
+                    value={siteConfig.hero_verse}
+                    onChange={(e) => updateConfig("hero_verse", e.target.value)}
+                    placeholder="Porque o Filho do Homem veio buscar e salvar o que se havia perdido."
+                    rows={2}
+                  />
+                </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="hero_verse_reference">Referência do Versículo</Label>
+                  <Input
+                    id="hero_verse_reference"
+                    value={siteConfig.hero_verse_reference}
+                    onChange={(e) => updateConfig("hero_verse_reference", e.target.value)}
+                    placeholder="Lucas 19:10"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
           {/* Contact Info */}
           <div className="bg-card rounded-xl p-6 shadow-card border border-border">
             <div className="flex items-center gap-4 mb-6">

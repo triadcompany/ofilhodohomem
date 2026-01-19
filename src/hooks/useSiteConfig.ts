@@ -12,6 +12,12 @@ export interface SiteConfig {
   facebook_url: string;
   instagram_url: string;
   youtube_url: string;
+  hero_welcome_text: string;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_verse: string;
+  hero_verse_reference: string;
+  hero_image_url: string;
 }
 
 const defaultConfig: SiteConfig = {
@@ -25,6 +31,12 @@ const defaultConfig: SiteConfig = {
   facebook_url: "",
   instagram_url: "",
   youtube_url: "",
+  hero_welcome_text: "Bem-vindo ao",
+  hero_title: "Tabernáculo",
+  hero_subtitle: "O Filho do Homem",
+  hero_verse: "Porque o Filho do Homem veio buscar e salvar o que se havia perdido.",
+  hero_verse_reference: "Lucas 19:10",
+  hero_image_url: "",
 };
 
 export const useSiteConfig = () => {
