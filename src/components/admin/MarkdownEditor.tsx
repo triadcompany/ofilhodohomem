@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Bold, Italic, Heading2, Heading3, List, ListOrdered, Quote, Link, Eye, Edit3 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 interface MarkdownEditorProps {
   value: string;
@@ -92,7 +93,7 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
         <TabsContent value="preview" className="m-0">
           <div className="min-h-[400px] p-4 prose prose-sm max-w-none prose-headings:font-display prose-headings:text-foreground prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-4 prose-h3:mb-2 prose-p:font-body prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:marker:text-accent prose-blockquote:border-l-accent prose-blockquote:text-muted-foreground prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm">
             {value ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                 {value}
               </ReactMarkdown>
             ) : (
