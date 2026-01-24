@@ -1,31 +1,51 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Target, Eye, Heart, BookOpen } from "lucide-react";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const values = [
-  {
-    icon: BookOpen,
-    title: "Fidelidade à Palavra",
-    description: "Cremos na Bíblia como a Palavra inspirada de Deus e a única regra de fé e prática.",
-  },
-  {
-    icon: Heart,
-    title: "Amor ao Próximo",
-    description: "Servimos a comunidade com amor, compaixão e generosidade, seguindo o exemplo de Cristo.",
-  },
-  {
-    icon: Target,
-    title: "Compromisso com a Verdade",
-    description: "Proclamamos a mensagem do Evangelho sem compromissos, mantendo a integridade doutrinária.",
-  },
-  {
-    icon: Eye,
-    title: "Adoração Reverente",
-    description: "Cultivamos uma adoração que honra a Deus em espírito e em verdade, com reverência e alegria.",
-  },
-];
+const valueIcons = [BookOpen, Heart, Target, Eye];
 
 const Sobre = () => {
+  const { config, loading } = useSiteConfig();
+
+  const values = [
+    {
+      icon: valueIcons[0],
+      title: config.about_value_1_title || "Fidelidade à Palavra",
+      description: config.about_value_1_description || "Cremos na Bíblia como a Palavra inspirada de Deus e a única regra de fé e prática.",
+    },
+    {
+      icon: valueIcons[1],
+      title: config.about_value_2_title || "Amor ao Próximo",
+      description: config.about_value_2_description || "Servimos a comunidade com amor, compaixão e generosidade, seguindo o exemplo de Cristo.",
+    },
+    {
+      icon: valueIcons[2],
+      title: config.about_value_3_title || "Compromisso com a Verdade",
+      description: config.about_value_3_description || "Proclamamos a mensagem do Evangelho sem compromissos, mantendo a integridade doutrinária.",
+    },
+    {
+      icon: valueIcons[3],
+      title: config.about_value_4_title || "Adoração Reverente",
+      description: config.about_value_4_description || "Cultivamos uma adoração que honra a Deus em espírito e em verdade, com reverência e alegria.",
+    },
+  ];
+
+  const defaultHistory = `O Tabernáculo O Filho do Homem nasceu do desejo sincero de proclamar a mensagem bíblica em sua plenitude e pureza. Fundada com o propósito de ser um lugar de refúgio espiritual e ensino da Palavra, nossa igreja tem sido um farol de esperança para muitas vidas.
+
+Ao longo dos anos, temos crescido não apenas em número, mas principalmente em profundidade espiritual. Nossa comunidade é formada por pessoas de todas as idades e origens, unidas pela fé em Jesus Cristo e pelo compromisso com a verdade das Escrituras.
+
+Continuamos firmes em nosso propósito inicial: anunciar que "o Filho do Homem veio buscar e salvar o que se havia perdido" (Lucas 19:10), e vemos diariamente as evidências do amor transformador de Deus em nossa congregação.`;
+
+  const defaultMission = "Proclamar o Evangelho de Jesus Cristo com fidelidade às Escrituras, fazendo discípulos e edificando vidas através do ensino da Palavra, da comunhão fraterna e do serviço ao próximo.";
+
+  const defaultVision = "Ser uma igreja que reflete o caráter de Cristo, transformando vidas e impactando a sociedade através do amor, da verdade e do poder do Evangelho, alcançando gerações para o Reino de Deus.";
+
+  const historyText = config.about_history || defaultHistory;
+  const missionText = config.about_mission || defaultMission;
+  const visionText = config.about_vision || defaultVision;
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -55,15 +75,24 @@ const Sobre = () => {
               </h2>
             </div>
             <div className="bg-card rounded-xl p-8 md:p-12 shadow-card border border-border">
-              <p className="font-body text-lg text-muted-foreground leading-relaxed mb-6">
-                O Tabernáculo O Filho do Homem nasceu do desejo sincero de proclamar a mensagem bíblica em sua plenitude e pureza. Fundada com o propósito de ser um lugar de refúgio espiritual e ensino da Palavra, nossa igreja tem sido um farol de esperança para muitas vidas.
-              </p>
-              <p className="font-body text-lg text-muted-foreground leading-relaxed mb-6">
-                Ao longo dos anos, temos crescido não apenas em número, mas principalmente em profundidade espiritual. Nossa comunidade é formada por pessoas de todas as idades e origens, unidas pela fé em Jesus Cristo e pelo compromisso com a verdade das Escrituras.
-              </p>
-              <p className="font-body text-lg text-muted-foreground leading-relaxed">
-                Continuamos firmes em nosso propósito inicial: anunciar que "o Filho do Homem veio buscar e salvar o que se havia perdido" (Lucas 19:10), e vemos diariamente as evidências do amor transformador de Deus em nossa congregação.
-              </p>
+              {loading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                </div>
+              ) : (
+                historyText.split('\n\n').map((paragraph, index) => (
+                  <p 
+                    key={index} 
+                    className={`font-body text-lg text-muted-foreground leading-relaxed ${index < historyText.split('\n\n').length - 1 ? 'mb-6' : ''}`}
+                  >
+                    {paragraph}
+                  </p>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -81,9 +110,17 @@ const Sobre = () => {
               <h3 className="font-display text-2xl font-semibold text-foreground mb-4">
                 Missão
               </h3>
-              <p className="font-body text-muted-foreground leading-relaxed">
-                Proclamar o Evangelho de Jesus Cristo com fidelidade às Escrituras, fazendo discípulos e edificando vidas através do ensino da Palavra, da comunhão fraterna e do serviço ao próximo.
-              </p>
+              {loading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+              ) : (
+                <p className="font-body text-muted-foreground leading-relaxed">
+                  {missionText}
+                </p>
+              )}
             </div>
 
             {/* Vision */}
@@ -94,9 +131,17 @@ const Sobre = () => {
               <h3 className="font-display text-2xl font-semibold text-foreground mb-4">
                 Visão
               </h3>
-              <p className="font-body text-muted-foreground leading-relaxed">
-                Ser uma igreja que reflete o caráter de Cristo, transformando vidas e impactando a sociedade através do amor, da verdade e do poder do Evangelho, alcançando gerações para o Reino de Deus.
-              </p>
+              {loading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+              ) : (
+                <p className="font-body text-muted-foreground leading-relaxed">
+                  {visionText}
+                </p>
+              )}
             </div>
           </div>
         </div>
