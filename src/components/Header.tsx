@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Menu, X, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import logoImage from "@/assets/logo.png";
 
 const navLinks = [
   { name: "Início", path: "/" },
@@ -23,11 +24,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
-              <span className="font-display text-accent-foreground text-lg font-bold">
-                {config.church_name.charAt(0)}
-              </span>
-            </div>
+            <img 
+              src={logoImage} 
+              alt={`${config.church_name} logo`}
+              className="w-12 h-12 rounded-full object-cover"
+            />
             <div className="hidden sm:block">
               <h1 className="font-display text-primary-foreground text-sm font-semibold tracking-wide">
                 {config.church_name}
