@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { User, Lock, Plus, Globe, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Save, Loader2, Image, Upload, X } from "lucide-react";
+import { User, Lock, Plus, Globe, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Save, Loader2, Image, Upload, X, BookOpen, MessageCircle, Map } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -37,6 +37,28 @@ interface SiteConfig {
   hero_verse: string;
   hero_verse_reference: string;
   hero_image_url: string;
+  // About page
+  about_history: string;
+  about_mission: string;
+  about_vision: string;
+  about_value_1_title: string;
+  about_value_1_description: string;
+  about_value_2_title: string;
+  about_value_2_description: string;
+  about_value_3_title: string;
+  about_value_3_description: string;
+  about_value_4_title: string;
+  about_value_4_description: string;
+  // Contact page
+  contact_address: string;
+  contact_phone: string;
+  contact_email: string;
+  contact_schedule: string;
+  contact_whatsapp: string;
+  contact_facebook_url: string;
+  contact_instagram_url: string;
+  contact_youtube_url: string;
+  contact_map_embed_url: string;
 }
 
 const defaultConfig: SiteConfig = {
@@ -56,6 +78,28 @@ const defaultConfig: SiteConfig = {
   hero_verse: "Porque o Filho do Homem veio buscar e salvar o que se havia perdido.",
   hero_verse_reference: "Lucas 19:10",
   hero_image_url: "",
+  // About page
+  about_history: "",
+  about_mission: "",
+  about_vision: "",
+  about_value_1_title: "Fidelidade à Palavra",
+  about_value_1_description: "",
+  about_value_2_title: "Amor ao Próximo",
+  about_value_2_description: "",
+  about_value_3_title: "Compromisso com a Verdade",
+  about_value_3_description: "",
+  about_value_4_title: "Adoração Reverente",
+  about_value_4_description: "",
+  // Contact page
+  contact_address: "",
+  contact_phone: "",
+  contact_email: "",
+  contact_schedule: "",
+  contact_whatsapp: "",
+  contact_facebook_url: "",
+  contact_instagram_url: "",
+  contact_youtube_url: "",
+  contact_map_embed_url: "",
 };
 
 const AdminConfiguracoes = () => {
@@ -229,10 +273,18 @@ const AdminConfiguracoes = () => {
       </div>
 
       <Tabs defaultValue="site" className="space-y-6">
-        <TabsList className="bg-muted">
+        <TabsList className="bg-muted flex-wrap h-auto gap-1 p-1">
           <TabsTrigger value="site" className="gap-2">
             <Globe className="w-4 h-4" />
             Site
+          </TabsTrigger>
+          <TabsTrigger value="about" className="gap-2">
+            <BookOpen className="w-4 h-4" />
+            Sobre
+          </TabsTrigger>
+          <TabsTrigger value="contact" className="gap-2">
+            <MessageCircle className="w-4 h-4" />
+            Contato
           </TabsTrigger>
           <TabsTrigger value="account" className="gap-2">
             <User className="w-4 h-4" />
@@ -533,6 +585,332 @@ const AdminConfiguracoes = () => {
                   placeholder="https://youtube.com/..."
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button
+              variant="gold"
+              onClick={handleSaveConfig}
+              disabled={savingConfig}
+              className="gap-2"
+            >
+              {savingConfig ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              {savingConfig ? "Salvando..." : "Salvar Configurações"}
+            </Button>
+          </div>
+        </TabsContent>
+
+        {/* About Page Settings */}
+        <TabsContent value="about" className="space-y-6 max-w-3xl">
+          {/* History */}
+          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-accent" />
+              </div>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-foreground">
+                  História
+                </h2>
+                <p className="font-ui text-sm text-muted-foreground">
+                  Texto exibido na seção "Nossa Trajetória"
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="about_history">Texto da História</Label>
+              <Textarea
+                id="about_history"
+                value={siteConfig.about_history}
+                onChange={(e) => updateConfig("about_history", e.target.value)}
+                placeholder="Descreva a história da igreja..."
+                rows={8}
+              />
+            </div>
+          </div>
+
+          {/* Mission & Vision */}
+          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Globe className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-foreground">
+                  Missão e Visão
+                </h2>
+                <p className="font-ui text-sm text-muted-foreground">
+                  Propósito e objetivos da igreja
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="about_mission">Missão</Label>
+                <Textarea
+                  id="about_mission"
+                  value={siteConfig.about_mission}
+                  onChange={(e) => updateConfig("about_mission", e.target.value)}
+                  placeholder="Qual é a missão da igreja..."
+                  rows={3}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="about_vision">Visão</Label>
+                <Textarea
+                  id="about_vision"
+                  value={siteConfig.about_vision}
+                  onChange={(e) => updateConfig("about_vision", e.target.value)}
+                  placeholder="Qual é a visão da igreja..."
+                  rows={3}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Values */}
+          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-accent" />
+              </div>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-foreground">
+                  Valores
+                </h2>
+                <p className="font-ui text-sm text-muted-foreground">
+                  Os 4 valores principais da igreja
+                </p>
+              </div>
+            </div>
+            <div className="space-y-6">
+              {[1, 2, 3, 4].map((num) => (
+                <div key={num} className="grid gap-4 sm:grid-cols-2 p-4 bg-muted/30 rounded-lg">
+                  <div className="space-y-2">
+                    <Label htmlFor={`about_value_${num}_title`}>Valor {num} - Título</Label>
+                    <Input
+                      id={`about_value_${num}_title`}
+                      value={siteConfig[`about_value_${num}_title` as keyof SiteConfig] || ""}
+                      onChange={(e) => updateConfig(`about_value_${num}_title` as keyof SiteConfig, e.target.value)}
+                      placeholder={`Título do valor ${num}`}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`about_value_${num}_description`}>Valor {num} - Descrição</Label>
+                    <Input
+                      id={`about_value_${num}_description`}
+                      value={siteConfig[`about_value_${num}_description` as keyof SiteConfig] || ""}
+                      onChange={(e) => updateConfig(`about_value_${num}_description` as keyof SiteConfig, e.target.value)}
+                      placeholder={`Descrição do valor ${num}`}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button
+              variant="gold"
+              onClick={handleSaveConfig}
+              disabled={savingConfig}
+              className="gap-2"
+            >
+              {savingConfig ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              {savingConfig ? "Salvando..." : "Salvar Configurações"}
+            </Button>
+          </div>
+        </TabsContent>
+
+        {/* Contact Page Settings */}
+        <TabsContent value="contact" className="space-y-6 max-w-3xl">
+          {/* Contact Info */}
+          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                <MessageCircle className="w-6 h-6 text-accent" />
+              </div>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-foreground">
+                  Informações de Contato
+                </h2>
+                <p className="font-ui text-sm text-muted-foreground">
+                  Dados exibidos na página de Contato
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="contact_address" className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  Endereço (use Enter para quebrar linha)
+                </Label>
+                <Textarea
+                  id="contact_address"
+                  value={siteConfig.contact_address}
+                  onChange={(e) => updateConfig("contact_address", e.target.value)}
+                  placeholder="Rua Exemplo, 123&#10;Bairro Centro&#10;Cidade - Estado, CEP 00000-000"
+                  rows={3}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_phone" className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-muted-foreground" />
+                  Telefone(s) (use Enter para quebrar linha)
+                </Label>
+                <Textarea
+                  id="contact_phone"
+                  value={siteConfig.contact_phone}
+                  onChange={(e) => updateConfig("contact_phone", e.target.value)}
+                  placeholder="(00) 0000-0000&#10;(00) 00000-0000"
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_email" className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  E-mail
+                </Label>
+                <Input
+                  id="contact_email"
+                  type="email"
+                  value={siteConfig.contact_email}
+                  onChange={(e) => updateConfig("contact_email", e.target.value)}
+                  placeholder="contato@tabernaculo.com"
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="contact_schedule">Horários dos Cultos (use Enter para quebrar linha)</Label>
+                <Textarea
+                  id="contact_schedule"
+                  value={siteConfig.contact_schedule}
+                  onChange={(e) => updateConfig("contact_schedule", e.target.value)}
+                  placeholder="Domingo: 09h e 19h&#10;Quarta-feira: 19h30&#10;Sexta-feira: 20h"
+                  rows={3}
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="contact_whatsapp" className="flex items-center gap-2">
+                  <MessageCircle className="w-4 h-4 text-muted-foreground" />
+                  WhatsApp (apenas números com código do país)
+                </Label>
+                <Input
+                  id="contact_whatsapp"
+                  value={siteConfig.contact_whatsapp}
+                  onChange={(e) => updateConfig("contact_whatsapp", e.target.value)}
+                  placeholder="5511999999999"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Social Media for Contact */}
+          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
+                <Instagram className="w-6 h-6 text-blue-500" />
+              </div>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-foreground">
+                  Redes Sociais (Página de Contato)
+                </h2>
+                <p className="font-ui text-sm text-muted-foreground">
+                  Links exibidos na página de Contato
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="space-y-2">
+                <Label htmlFor="contact_facebook_url" className="flex items-center gap-2">
+                  <Facebook className="w-4 h-4 text-muted-foreground" />
+                  Facebook
+                </Label>
+                <Input
+                  id="contact_facebook_url"
+                  value={siteConfig.contact_facebook_url}
+                  onChange={(e) => updateConfig("contact_facebook_url", e.target.value)}
+                  placeholder="https://facebook.com/..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_instagram_url" className="flex items-center gap-2">
+                  <Instagram className="w-4 h-4 text-muted-foreground" />
+                  Instagram
+                </Label>
+                <Input
+                  id="contact_instagram_url"
+                  value={siteConfig.contact_instagram_url}
+                  onChange={(e) => updateConfig("contact_instagram_url", e.target.value)}
+                  placeholder="https://instagram.com/..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_youtube_url" className="flex items-center gap-2">
+                  <Youtube className="w-4 h-4 text-muted-foreground" />
+                  YouTube
+                </Label>
+                <Input
+                  id="contact_youtube_url"
+                  value={siteConfig.contact_youtube_url}
+                  onChange={(e) => updateConfig("contact_youtube_url", e.target.value)}
+                  placeholder="https://youtube.com/..."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Map Embed */}
+          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Map className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-foreground">
+                  Mapa
+                </h2>
+                <p className="font-ui text-sm text-muted-foreground">
+                  URL de incorporação do Google Maps
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="contact_map_embed_url">URL do Embed do Mapa</Label>
+                <Input
+                  id="contact_map_embed_url"
+                  value={siteConfig.contact_map_embed_url}
+                  onChange={(e) => updateConfig("contact_map_embed_url", e.target.value)}
+                  placeholder="https://www.google.com/maps/embed?pb=..."
+                />
+                <p className="text-xs text-muted-foreground">
+                  Acesse o Google Maps, clique em "Compartilhar", selecione "Incorporar mapa" e copie apenas a URL do src.
+                </p>
+              </div>
+              {siteConfig.contact_map_embed_url && (
+                <div className="aspect-video rounded-lg overflow-hidden border border-border">
+                  <iframe
+                    src={siteConfig.contact_map_embed_url}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    title="Preview do Mapa"
+                  />
+                </div>
+              )}
             </div>
           </div>
 

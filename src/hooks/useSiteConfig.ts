@@ -18,6 +18,28 @@ export interface SiteConfig {
   hero_verse: string;
   hero_verse_reference: string;
   hero_image_url: string;
+  // About page
+  about_history: string;
+  about_mission: string;
+  about_vision: string;
+  about_value_1_title: string;
+  about_value_1_description: string;
+  about_value_2_title: string;
+  about_value_2_description: string;
+  about_value_3_title: string;
+  about_value_3_description: string;
+  about_value_4_title: string;
+  about_value_4_description: string;
+  // Contact page
+  contact_address: string;
+  contact_phone: string;
+  contact_email: string;
+  contact_schedule: string;
+  contact_whatsapp: string;
+  contact_facebook_url: string;
+  contact_instagram_url: string;
+  contact_youtube_url: string;
+  contact_map_embed_url: string;
 }
 
 const defaultConfig: SiteConfig = {
@@ -37,6 +59,28 @@ const defaultConfig: SiteConfig = {
   hero_verse: "Porque o Filho do Homem veio buscar e salvar o que se havia perdido.",
   hero_verse_reference: "Lucas 19:10",
   hero_image_url: "",
+  // About page
+  about_history: "",
+  about_mission: "",
+  about_vision: "",
+  about_value_1_title: "Fidelidade à Palavra",
+  about_value_1_description: "",
+  about_value_2_title: "Amor ao Próximo",
+  about_value_2_description: "",
+  about_value_3_title: "Compromisso com a Verdade",
+  about_value_3_description: "",
+  about_value_4_title: "Adoração Reverente",
+  about_value_4_description: "",
+  // Contact page
+  contact_address: "",
+  contact_phone: "",
+  contact_email: "",
+  contact_schedule: "",
+  contact_whatsapp: "",
+  contact_facebook_url: "",
+  contact_instagram_url: "",
+  contact_youtube_url: "",
+  contact_map_embed_url: "",
 };
 
 export const useSiteConfig = () => {
