@@ -17,7 +17,9 @@ import {
   Minus,
   Type,
   Highlighter,
-  Underline
+  Underline,
+  ALargeSmall,
+  ChevronDown
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -160,6 +162,43 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
               )
             ))}
             
+            {/* Font Family Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-2 gap-1"
+                  title="Tipo de fonte"
+                >
+                  <ALargeSmall className="w-4 h-4" />
+                  <span className="text-xs hidden sm:inline">Fonte</span>
+                  <ChevronDown className="w-3 h-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-popover z-50">
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Cinzel\', serif">', '</span>')}>
+                  <span style={{ fontFamily: "'Cinzel', serif" }}>Cinzel (Títulos)</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Lora\', serif">', '</span>')}>
+                  <span style={{ fontFamily: "'Lora', serif" }}>Lora (Corpo)</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Inter\', sans-serif">', '</span>')}>
+                  <span style={{ fontFamily: "'Inter', sans-serif" }}>Inter (UI)</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Georgia\', serif">', '</span>')}>
+                  <span style={{ fontFamily: "'Georgia', serif" }}>Georgia</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Times New Roman\', serif">', '</span>')}>
+                  <span style={{ fontFamily: "'Times New Roman', serif" }}>Times New Roman</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Arial\', sans-serif">', '</span>')}>
+                  <span style={{ fontFamily: "'Arial', sans-serif" }}>Arial</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
             {/* Font Size Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -172,20 +211,30 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
                 >
                   <Type className="w-4 h-4" />
                   <span className="text-xs hidden sm:inline">Tamanho</span>
+                  <ChevronDown className="w-3 h-3" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
+              <DropdownMenuContent align="start" className="bg-popover z-50">
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 0.75rem">', '</span>')}>
+                  <span style={{ fontSize: '0.75rem' }}>Muito Pequeno (12px)</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 0.875rem">', '</span>')}>
-                  Pequeno
+                  <span style={{ fontSize: '0.875rem' }}>Pequeno (14px)</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1rem">', '</span>')}>
-                  Normal
+                  <span style={{ fontSize: '1rem' }}>Normal (16px)</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1.125rem">', '</span>')}>
+                  <span style={{ fontSize: '1.125rem' }}>Médio (18px)</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1.25rem">', '</span>')}>
-                  Grande
+                  <span style={{ fontSize: '1.25rem' }}>Grande (20px)</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1.5rem">', '</span>')}>
-                  Muito Grande
+                  <span style={{ fontSize: '1.5rem' }}>Muito Grande (24px)</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 2rem">', '</span>')}>
+                  <span style={{ fontSize: '1.75rem' }}>Extra Grande (32px)</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
