@@ -122,8 +122,31 @@ const EstudoDetail = () => {
             </header>
 
             {/* Content */}
-            <div className="prose prose-lg max-w-none prose-headings:font-display prose-headings:text-foreground prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-p:font-body prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:marker:text-accent prose-blockquote:border-l-accent prose-blockquote:text-muted-foreground prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:bg-muted prose-pre:border prose-pre:border-border">
-              <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+            <div className="prose prose-lg max-w-none 
+              prose-headings:font-display prose-headings:text-foreground 
+              prose-h1:text-3xl prose-h1:font-bold prose-h1:mt-8 prose-h1:mb-6 prose-h1:border-b prose-h1:border-border prose-h1:pb-3
+              prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-10 prose-h2:mb-4 
+              prose-h3:text-xl prose-h3:font-medium prose-h3:mt-8 prose-h3:mb-3 
+              prose-p:font-body prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6
+              prose-a:text-accent prose-a:no-underline hover:prose-a:underline 
+              prose-strong:text-foreground prose-strong:font-semibold
+              prose-em:italic
+              prose-ul:text-muted-foreground prose-ul:my-6 prose-ul:pl-6
+              prose-ol:text-muted-foreground prose-ol:my-6 prose-ol:pl-6
+              prose-li:marker:text-accent prose-li:mb-3
+              prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:bg-muted/30 prose-blockquote:py-3 prose-blockquote:px-6 prose-blockquote:my-6 prose-blockquote:italic prose-blockquote:text-muted-foreground prose-blockquote:rounded-r-lg
+              prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm 
+              prose-pre:bg-muted prose-pre:border prose-pre:border-border
+              prose-hr:border-border prose-hr:my-10">
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm, remarkBreaks]}
+                components={{
+                  p: ({ children }) => <p className="mb-6 leading-relaxed">{children}</p>,
+                  span: ({ style, children }) => <span style={style}>{children}</span>,
+                  u: ({ children }) => <u>{children}</u>,
+                  mark: ({ children }) => <mark className="bg-accent/30 px-1 rounded">{children}</mark>,
+                }}
+              >
                 {estudo.content || ""}
               </ReactMarkdown>
             </div>
