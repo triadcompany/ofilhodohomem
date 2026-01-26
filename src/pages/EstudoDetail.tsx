@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import rehypeRaw from "rehype-raw";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -140,6 +141,7 @@ const EstudoDetail = () => {
               prose-hr:border-border prose-hr:my-10">
               <ReactMarkdown 
                 remarkPlugins={[remarkGfm, remarkBreaks]}
+                rehypePlugins={[rehypeRaw]}
                 components={{
                   p: ({ children }) => <p className="mb-6 leading-relaxed">{children}</p>,
                   span: ({ style, children }) => <span style={style}>{children}</span>,
