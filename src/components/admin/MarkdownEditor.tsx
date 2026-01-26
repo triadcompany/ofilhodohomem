@@ -49,11 +49,18 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
     
     onChange(newText);
     
-    // Reposition cursor
+    // Reposition cursor after the inserted text
     setTimeout(() => {
       textarea.focus();
-      const newPosition = start + before.length + selectedText.length + after.length;
-      textarea.setSelectionRange(newPosition, newPosition);
+      if (selectedText) {
+        // If there was selected text, place cursor after the closing tag
+        const newPosition = start + before.length + selectedText.length + after.length;
+        textarea.setSelectionRange(newPosition, newPosition);
+      } else {
+        // If no selection, place cursor between the tags
+        const newPosition = start + before.length;
+        textarea.setSelectionRange(newPosition, newPosition);
+      }
     }, 0);
   };
 
@@ -73,19 +80,42 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
     }, 0);
   };
 
-  const insertLineBreak = () => {
-    const textarea = document.getElementById("markdown-content") as HTMLTextAreaElement;
-    if (!textarea) return;
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const modKey = isMac ? e.metaKey : e.ctrlKey;
 
-    const start = textarea.selectionStart;
-    const newText = value.substring(0, start) + "\n\n" + value.substring(start);
-    
-    onChange(newText);
-    
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + 2, start + 2);
-    }, 0);
+    if (modKey) {
+      switch (e.key.toLowerCase()) {
+        case 'b':
+          e.preventDefault();
+          insertMarkdown("**", "**");
+          break;
+        case 'i':
+          e.preventDefault();
+          insertMarkdown("*", "*");
+          break;
+        case 'u':
+          e.preventDefault();
+          insertMarkdown("<u>", "</u>");
+          break;
+        case 'k':
+          e.preventDefault();
+          insertMarkdown("[", "](url)");
+          break;
+        case '1':
+          e.preventDefault();
+          insertAtLineStart("# ");
+          break;
+        case '2':
+          e.preventDefault();
+          insertAtLineStart("## ");
+          break;
+        case '3':
+          e.preventDefault();
+          insertAtLineStart("### ");
+          break;
+      }
+    }
   };
 
   const toolbarButtons = [
@@ -179,6 +209,7 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
             id="markdown-content"
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={placeholder}
             className="min-h-[400px] border-0 rounded-none focus-visible:ring-0 resize-y font-mono text-sm leading-relaxed"
           />
@@ -228,11 +259,12 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
       {/* Markdown Help */}
       <div className="bg-muted/30 border-t border-border px-3 py-2">
         <p className="text-xs text-muted-foreground">
-          <strong>Dicas:</strong> Use <code className="bg-muted px-1 rounded"># Título</code> para títulos, 
-          <code className="bg-muted px-1 rounded mx-1">## Subtítulo</code> para subtítulos, 
-          <code className="bg-muted px-1 rounded mx-1">**negrito**</code>, 
-          <code className="bg-muted px-1 rounded mx-1">*itálico*</code>, 
-          <code className="bg-muted px-1 rounded mx-1">&gt; citação</code> para citações bíblicas. 
+          <strong>Atalhos:</strong> 
+          <code className="bg-muted px-1 rounded mx-1">Ctrl+B</code> negrito, 
+          <code className="bg-muted px-1 rounded mx-1">Ctrl+I</code> itálico, 
+          <code className="bg-muted px-1 rounded mx-1">Ctrl+U</code> sublinhado, 
+          <code className="bg-muted px-1 rounded mx-1">Ctrl+K</code> link, 
+          <code className="bg-muted px-1 rounded mx-1">Ctrl+1/2/3</code> títulos.
           Deixe uma <strong>linha em branco</strong> entre parágrafos.
         </p>
       </div>
