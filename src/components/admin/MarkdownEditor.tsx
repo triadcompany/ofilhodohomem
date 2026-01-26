@@ -30,6 +30,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import rehypeRaw from "rehype-raw";
 
 interface MarkdownEditorProps {
   value: string;
@@ -283,6 +284,7 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
             {value ? (
               <ReactMarkdown 
                 remarkPlugins={[remarkGfm, remarkBreaks]}
+                rehypePlugins={[rehypeRaw]}
                 components={{
                   // Custom paragraph with proper spacing
                   p: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
