@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import MarkdownEditor from "@/components/admin/MarkdownEditor";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface Estudo {
   id: string;
@@ -283,7 +283,7 @@ const AdminEstudos = () => {
 
             <div className="space-y-2">
               <Label>Conteúdo</Label>
-              <MarkdownEditor
+              <RichTextEditor
                 value={formData.content}
                 onChange={(value) => setFormData({ ...formData, content: value })}
                 placeholder="Escreva o conteúdo do estudo aqui..."
