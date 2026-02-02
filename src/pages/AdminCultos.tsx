@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 // Extrai o ID do vídeo de uma URL do YouTube
 const extractYouTubeId = (url: string): string => {
@@ -157,7 +157,7 @@ const AdminCultos = () => {
       summary: culto.summary || "",
       video_id: videoUrl,
       thumbnail_url: culto.thumbnail_url || "",
-      teachings: culto.teachings?.join("\n") || "",
+      teachings: culto.teachings?.[0] || "",
       published: culto.published ?? true,
     });
     setIsDialogOpen(true);
@@ -176,7 +176,7 @@ const AdminCultos = () => {
       summary: formData.summary || null,
       video_id: videoId || null,
       thumbnail_url: formData.thumbnail_url || null,
-      teachings: formData.teachings ? formData.teachings.split("\n").filter(Boolean) : null,
+      teachings: formData.teachings ? [formData.teachings] : null,
       published: formData.published,
     };
 
@@ -366,33 +366,29 @@ const AdminCultos = () => {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
-              <Textarea
-                id="description"
+              <Label>Descrição</Label>
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={3}
+                onChange={(value) => setFormData({ ...formData, description: value })}
+                placeholder="Descrição do culto..."
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="summary">Resumo do Culto</Label>
-              <Textarea
-                id="summary"
+              <Label>Resumo do Culto</Label>
+              <RichTextEditor
                 value={formData.summary}
-                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
-                rows={4}
+                onChange={(value) => setFormData({ ...formData, summary: value })}
+                placeholder="Resumo do culto..."
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="teachings">Principais Ensinamentos (um por linha)</Label>
-              <Textarea
-                id="teachings"
+              <Label>Principais Ensinamentos</Label>
+              <RichTextEditor
                 value={formData.teachings}
-                onChange={(e) => setFormData({ ...formData, teachings: e.target.value })}
-                rows={4}
-                placeholder="Primeiro ensinamento&#10;Segundo ensinamento&#10;Terceiro ensinamento"
+                onChange={(value) => setFormData({ ...formData, teachings: value })}
+                placeholder="Use a lista numerada para adicionar os principais ensinamentos..."
               />
             </div>
 
