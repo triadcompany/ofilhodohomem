@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import MarkdownEditor from "@/components/admin/MarkdownEditor";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
   useAdminPages,
   useCreatePage,
@@ -355,7 +355,7 @@ const AdminPaginas = () => {
 
             <div className="space-y-2">
               <Label>Conteúdo</Label>
-              <MarkdownEditor
+              <RichTextEditor
                 value={formData.content || ""}
                 onChange={(value) => setFormData({ ...formData, content: value })}
                 placeholder="Escreva o conteúdo da página..."
