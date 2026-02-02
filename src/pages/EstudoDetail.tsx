@@ -144,9 +144,26 @@ const EstudoDetail = () => {
                 rehypePlugins={[rehypeRaw]}
                 components={{
                   p: ({ children }) => <p className="mb-6 leading-relaxed">{children}</p>,
-                  span: ({ style, children }) => <span style={style}>{children}</span>,
-                  u: ({ children }) => <u>{children}</u>,
+                  h1: ({ children }) => <h1 className="text-3xl font-bold mt-8 mb-6 border-b border-border pb-3">{children}</h1>,
+                  h2: ({ children }) => <h2 className="text-2xl font-semibold mt-10 mb-4">{children}</h2>,
+                  h3: ({ children }) => <h3 className="text-xl font-medium mt-8 mb-3">{children}</h3>,
+                  ul: ({ children }) => <ul className="list-disc pl-6 my-6 space-y-2">{children}</ul>,
+                  ol: ({ children }) => <ol className="list-decimal pl-6 my-6 space-y-2">{children}</ol>,
+                  li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-accent bg-muted/30 py-3 px-6 my-6 italic rounded-r-lg">
+                      {children}
+                    </blockquote>
+                  ),
+                  a: ({ href, children }) => (
+                    <a href={href} className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">
+                      {children}
+                    </a>
+                  ),
                   mark: ({ children }) => <mark className="bg-accent/30 px-1 rounded">{children}</mark>,
+                  u: ({ children }) => <u>{children}</u>,
+                  span: ({ style, children, ...props }) => <span style={style} {...props}>{children}</span>,
+                  div: ({ style, children, ...props }) => <div style={style} {...props}>{children}</div>,
                 }}
               >
                 {estudo.content || ""}

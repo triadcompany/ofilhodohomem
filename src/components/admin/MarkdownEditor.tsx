@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,12 @@ import {
   Eye, 
   Edit3,
   Minus,
-  Type,
   Highlighter,
   Underline,
-  ALargeSmall,
-  ChevronDown
+  Palette,
+  AlignLeft,
+  AlignCenter,
+  AlignRight
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -27,6 +28,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -38,50 +44,70 @@ interface MarkdownEditorProps {
   placeholder?: string;
 }
 
+const COLORS = [
+  { name: "Vermelho", value: "#dc2626" },
+  { name: "Laranja", value: "#ea580c" },
+  { name: "Amarelo", value: "#ca8a04" },
+  { name: "Verde", value: "#16a34a" },
+  { name: "Azul", value: "#2563eb" },
+  { name: "Roxo", value: "#9333ea" },
+  { name: "Rosa", value: "#db2777" },
+  { name: "Cinza", value: "#6b7280" },
+];
+
 const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) => {
   const [activeTab, setActiveTab] = useState<string>("edit");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const insertMarkdown = (before: string, after: string = "") => {
-    const textarea = document.getElementById("markdown-content") as HTMLTextAreaElement;
+  const getTextarea = useCallback(() => {
+    return textareaRef.current || document.getElementById("markdown-content") as HTMLTextAreaElement;
+  }, []);
+
+  const wrapSelection = useCallback((before: string, after: string = "") => {
+    const textarea = getTextarea();
     if (!textarea) return;
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selectedText = value.substring(start, end);
-    const newText = value.substring(0, start) + before + selectedText + after + value.substring(end);
     
+    const newText = value.substring(0, start) + before + selectedText + after + value.substring(end);
     onChange(newText);
     
-    // Reposition cursor after the inserted text
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       textarea.focus();
       if (selectedText) {
-        // If there was selected text, place cursor after the closing tag
         const newPosition = start + before.length + selectedText.length + after.length;
         textarea.setSelectionRange(newPosition, newPosition);
       } else {
-        // If no selection, place cursor between the tags
         const newPosition = start + before.length;
         textarea.setSelectionRange(newPosition, newPosition);
       }
-    }, 0);
-  };
+    });
+  }, [value, onChange, getTextarea]);
 
-  const insertAtLineStart = (prefix: string) => {
-    const textarea = document.getElementById("markdown-content") as HTMLTextAreaElement;
+  const insertAtLineStart = useCallback((prefix: string) => {
+    const textarea = getTextarea();
     if (!textarea) return;
 
     const start = textarea.selectionStart;
     const lineStart = value.lastIndexOf('\n', start - 1) + 1;
-    const newText = value.substring(0, lineStart) + prefix + value.substring(lineStart);
+    const lineEnd = value.indexOf('\n', start);
+    const currentLine = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
     
+    // Remove existing heading prefixes
+    const cleanLine = currentLine.replace(/^#{1,3}\s*/, '');
+    const newLine = prefix + cleanLine;
+    
+    const newText = value.substring(0, lineStart) + newLine + value.substring(lineEnd === -1 ? value.length : lineEnd);
     onChange(newText);
     
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       textarea.focus();
-      textarea.setSelectionRange(start + prefix.length, start + prefix.length);
-    }, 0);
-  };
+      const newPos = lineStart + prefix.length;
+      textarea.setSelectionRange(newPos, newPos);
+    });
+  }, [value, onChange, getTextarea]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
@@ -91,19 +117,19 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
       switch (e.key.toLowerCase()) {
         case 'b':
           e.preventDefault();
-          insertMarkdown("**", "**");
+          wrapSelection("**", "**");
           break;
         case 'i':
           e.preventDefault();
-          insertMarkdown("*", "*");
+          wrapSelection("_", "_");
           break;
         case 'u':
           e.preventDefault();
-          insertMarkdown("<u>", "</u>");
+          wrapSelection("<u>", "</u>");
           break;
         case 'k':
           e.preventDefault();
-          insertMarkdown("[", "](url)");
+          wrapSelection("[", "](url)");
           break;
         case '1':
           e.preventDefault();
@@ -121,23 +147,29 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
     }
   };
 
-  const toolbarButtons = [
-    { icon: Bold, label: "Negrito (Ctrl+B)", action: () => insertMarkdown("**", "**") },
-    { icon: Italic, label: "Itálico (Ctrl+I)", action: () => insertMarkdown("*", "*") },
-    { icon: Underline, label: "Sublinhado", action: () => insertMarkdown("<u>", "</u>") },
-    { icon: Highlighter, label: "Destacar", action: () => insertMarkdown("==", "==") },
-    { type: "separator" as const },
-    { icon: Heading1, label: "Título Principal", action: () => insertAtLineStart("# ") },
-    { icon: Heading2, label: "Título", action: () => insertAtLineStart("## ") },
-    { icon: Heading3, label: "Subtítulo", action: () => insertAtLineStart("### ") },
-    { type: "separator" as const },
-    { icon: List, label: "Lista", action: () => insertAtLineStart("- ") },
-    { icon: ListOrdered, label: "Lista Numerada", action: () => insertAtLineStart("1. ") },
-    { icon: Quote, label: "Citação Bíblica", action: () => insertAtLineStart("> ") },
-    { type: "separator" as const },
-    { icon: Link, label: "Link", action: () => insertMarkdown("[", "](url)") },
-    { icon: Minus, label: "Linha Horizontal", action: () => insertMarkdown("\n\n---\n\n") },
-  ];
+  const formatBold = () => wrapSelection("**", "**");
+  const formatItalic = () => wrapSelection("_", "_");
+  const formatUnderline = () => wrapSelection("<u>", "</u>");
+  const formatHighlight = () => wrapSelection("<mark>", "</mark>");
+  const formatLink = () => wrapSelection("[", "](url)");
+  const insertHr = () => {
+    const textarea = getTextarea();
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const newText = value.substring(0, start) + "\n\n---\n\n" + value.substring(start);
+    onChange(newText);
+  };
+  const insertList = () => insertAtLineStart("- ");
+  const insertNumberedList = () => insertAtLineStart("1. ");
+  const insertQuote = () => insertAtLineStart("> ");
+  
+  const applyColor = (color: string) => {
+    wrapSelection(`<span style="color: ${color}">`, "</span>");
+  };
+
+  const applyAlignment = (align: string) => {
+    wrapSelection(`<div style="text-align: ${align}">`, "</div>");
+  };
 
   return (
     <div className="border border-border rounded-lg overflow-hidden">
@@ -145,100 +177,98 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
         <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-muted/50 border-b border-border px-2 py-1 gap-2">
           {/* Toolbar */}
           <div className="flex items-center gap-0.5 flex-wrap">
-            {toolbarButtons.map((btn, index) => (
-              'type' in btn && btn.type === 'separator' ? (
-                <div key={index} className="w-px h-6 bg-border mx-1" />
-              ) : (
-                <Button
-                  key={index}
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={'action' in btn ? btn.action : undefined}
-                  title={'label' in btn ? btn.label : undefined}
-                >
-                  {'icon' in btn && <btn.icon className="w-4 h-4" />}
-                </Button>
-              )
-            ))}
+            {/* Text formatting */}
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={formatBold} title="Negrito (Ctrl+B)">
+              <Bold className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={formatItalic} title="Itálico (Ctrl+I)">
+              <Italic className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={formatUnderline} title="Sublinhado (Ctrl+U)">
+              <Underline className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={formatHighlight} title="Destacar">
+              <Highlighter className="w-4 h-4" />
+            </Button>
             
-            {/* Font Family Dropdown */}
+            {/* Color picker */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" title="Cor do texto">
+                  <Palette className="w-4 h-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-2" align="start">
+                <div className="grid grid-cols-4 gap-1">
+                  {COLORS.map((color) => (
+                    <button
+                      key={color.value}
+                      type="button"
+                      onClick={() => applyColor(color.value)}
+                      className="w-6 h-6 rounded border border-border hover:scale-110 transition-transform"
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+            
+            <div className="w-px h-6 bg-border mx-1" />
+            
+            {/* Headings */}
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => insertAtLineStart("# ")} title="Título 1">
+              <Heading1 className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => insertAtLineStart("## ")} title="Título 2">
+              <Heading2 className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => insertAtLineStart("### ")} title="Título 3">
+              <Heading3 className="w-4 h-4" />
+            </Button>
+            
+            <div className="w-px h-6 bg-border mx-1" />
+            
+            {/* Lists and quotes */}
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={insertList} title="Lista">
+              <List className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={insertNumberedList} title="Lista numerada">
+              <ListOrdered className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={insertQuote} title="Citação">
+              <Quote className="w-4 h-4" />
+            </Button>
+            
+            <div className="w-px h-6 bg-border mx-1" />
+            
+            {/* Alignment */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2 gap-1"
-                  title="Tipo de fonte"
-                >
-                  <ALargeSmall className="w-4 h-4" />
-                  <span className="text-xs hidden sm:inline">Fonte</span>
-                  <ChevronDown className="w-3 h-3" />
+                <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" title="Alinhamento">
+                  <AlignLeft className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-popover z-50">
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Cinzel\', serif">', '</span>')}>
-                  <span style={{ fontFamily: "'Cinzel', serif" }}>Cinzel (Títulos)</span>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => applyAlignment("left")}>
+                  <AlignLeft className="w-4 h-4 mr-2" /> Esquerda
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Lora\', serif">', '</span>')}>
-                  <span style={{ fontFamily: "'Lora', serif" }}>Lora (Corpo)</span>
+                <DropdownMenuItem onClick={() => applyAlignment("center")}>
+                  <AlignCenter className="w-4 h-4 mr-2" /> Centro
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Inter\', sans-serif">', '</span>')}>
-                  <span style={{ fontFamily: "'Inter', sans-serif" }}>Inter (UI)</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Georgia\', serif">', '</span>')}>
-                  <span style={{ fontFamily: "'Georgia', serif" }}>Georgia</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Times New Roman\', serif">', '</span>')}>
-                  <span style={{ fontFamily: "'Times New Roman', serif" }}>Times New Roman</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-family: \'Arial\', sans-serif">', '</span>')}>
-                  <span style={{ fontFamily: "'Arial', sans-serif" }}>Arial</span>
+                <DropdownMenuItem onClick={() => applyAlignment("right")}>
+                  <AlignRight className="w-4 h-4 mr-2" /> Direita
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* Font Size Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2 gap-1"
-                  title="Tamanho do texto"
-                >
-                  <Type className="w-4 h-4" />
-                  <span className="text-xs hidden sm:inline">Tamanho</span>
-                  <ChevronDown className="w-3 h-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-popover z-50">
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 0.75rem">', '</span>')}>
-                  <span style={{ fontSize: '0.75rem' }}>Muito Pequeno (12px)</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 0.875rem">', '</span>')}>
-                  <span style={{ fontSize: '0.875rem' }}>Pequeno (14px)</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1rem">', '</span>')}>
-                  <span style={{ fontSize: '1rem' }}>Normal (16px)</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1.125rem">', '</span>')}>
-                  <span style={{ fontSize: '1.125rem' }}>Médio (18px)</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1.25rem">', '</span>')}>
-                  <span style={{ fontSize: '1.25rem' }}>Grande (20px)</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 1.5rem">', '</span>')}>
-                  <span style={{ fontSize: '1.5rem' }}>Muito Grande (24px)</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => insertMarkdown('<span style="font-size: 2rem">', '</span>')}>
-                  <span style={{ fontSize: '1.75rem' }}>Extra Grande (32px)</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Link and HR */}
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={formatLink} title="Link (Ctrl+K)">
+              <Link className="w-4 h-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={insertHr} title="Linha horizontal">
+              <Minus className="w-4 h-4" />
+            </Button>
           </div>
           
           {/* Tabs */}
@@ -256,6 +286,7 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
 
         <TabsContent value="edit" className="m-0">
           <Textarea
+            ref={textareaRef}
             id="markdown-content"
             value={value}
             onChange={(e) => onChange(e.target.value)}
@@ -286,14 +317,29 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
                 remarkPlugins={[remarkGfm, remarkBreaks]}
                 rehypePlugins={[rehypeRaw]}
                 components={{
-                  // Custom paragraph with proper spacing
                   p: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
-                  // Support for HTML spans with inline styles
-                  span: ({ style, children }) => <span style={style}>{children}</span>,
-                  // Support for underline
+                  h1: ({ children }) => <h1 className="text-2xl font-bold mt-6 mb-4 border-b border-border pb-2">{children}</h1>,
+                  h2: ({ children }) => <h2 className="text-xl font-semibold mt-5 mb-3">{children}</h2>,
+                  h3: ({ children }) => <h3 className="text-lg font-medium mt-4 mb-2">{children}</h3>,
+                  ul: ({ children }) => <ul className="list-disc pl-6 my-4 space-y-1">{children}</ul>,
+                  ol: ({ children }) => <ol className="list-decimal pl-6 my-4 space-y-1">{children}</ol>,
+                  li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-accent bg-muted/30 py-2 px-4 my-4 italic">
+                      {children}
+                    </blockquote>
+                  ),
+                  a: ({ href, children }) => (
+                    <a href={href} className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">
+                      {children}
+                    </a>
+                  ),
+                  mark: ({ children }) => (
+                    <mark className="bg-accent/30 px-1 rounded">{children}</mark>
+                  ),
                   u: ({ children }) => <u>{children}</u>,
-                  // Highlighted text (using mark)
-                  mark: ({ children }) => <mark className="bg-accent/30 px-1 rounded">{children}</mark>,
+                  span: ({ style, children, ...props }) => <span style={style} {...props}>{children}</span>,
+                  div: ({ style, children, ...props }) => <div style={style} {...props}>{children}</div>,
                 }}
               >
                 {value}
@@ -310,13 +356,12 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
       {/* Markdown Help */}
       <div className="bg-muted/30 border-t border-border px-3 py-2">
         <p className="text-xs text-muted-foreground">
-          <strong>Atalhos:</strong> 
-          <code className="bg-muted px-1 rounded mx-1">Ctrl+B</code> negrito, 
-          <code className="bg-muted px-1 rounded mx-1">Ctrl+I</code> itálico, 
-          <code className="bg-muted px-1 rounded mx-1">Ctrl+U</code> sublinhado, 
-          <code className="bg-muted px-1 rounded mx-1">Ctrl+K</code> link, 
-          <code className="bg-muted px-1 rounded mx-1">Ctrl+1/2/3</code> títulos.
-          Deixe uma <strong>linha em branco</strong> entre parágrafos.
+          <strong>Atalhos:</strong>{" "}
+          <code className="bg-muted px-1 rounded mx-0.5">Ctrl+B</code> negrito,{" "}
+          <code className="bg-muted px-1 rounded mx-0.5">Ctrl+I</code> itálico,{" "}
+          <code className="bg-muted px-1 rounded mx-0.5">Ctrl+U</code> sublinhado,{" "}
+          <code className="bg-muted px-1 rounded mx-0.5">Ctrl+K</code> link.{" "}
+          Use <strong>linha em branco</strong> entre parágrafos.
         </p>
       </div>
     </div>
