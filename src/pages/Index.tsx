@@ -124,14 +124,20 @@ const Index = () => {
                 title="Último Culto Publicado"
                 align="left"
               />
-              <CultoCard
-                id="1"
-                title="A Fé que Vence o Mundo"
-                date="2025-01-05"
-                description="Uma mensagem poderosa sobre a fé que nos sustenta em tempos difíceis e nos leva à vitória em Cristo."
-                thumbnail_url="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1200&h=675&fit=crop"
-                isFeatured
-              />
+              {featuredCulto ? (
+                <CultoCard
+                  id={featuredCulto.id}
+                  title={featuredCulto.title}
+                  date={featuredCulto.date}
+                  description={featuredCulto.description}
+                  thumbnail_url={featuredCulto.thumbnail_url}
+                  isFeatured
+                />
+              ) : (
+                <div className="text-muted-foreground text-center py-12">
+                  Nenhum culto publicado ainda.
+                </div>
+              )}
             </div>
             <div>
               <SectionTitle
