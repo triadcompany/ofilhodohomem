@@ -12,6 +12,8 @@ import EstudoDetail from "./pages/EstudoDetail";
 import Sobre from "./pages/Sobre";
 import AoVivo from "./pages/AoVivo";
 import Contato from "./pages/Contato";
+import VinteAnosMinisterio from "./pages/VinteAnosMinisterio";
+import OInicio from "./pages/OInicio";
 import AdminLogin from "./pages/AdminLogin";
 import AdminLayout from "./pages/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -39,6 +41,8 @@ const App = () => (
             <Route path="/sobre" element={<Sobre />} />
             <Route path="/ao-vivo" element={<AoVivo />} />
             <Route path="/contato" element={<Contato />} />
+            <Route path="/nossa-historia/20-anos" element={<VinteAnosMinisterio />} />
+            <Route path="/nossa-historia/o-inicio" element={<OInicio />} />
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
