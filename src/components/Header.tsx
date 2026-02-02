@@ -1,22 +1,39 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, Play } from "lucide-react";
+import { Menu, X, Play, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import logoImage from "@/assets/logo.png";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navLinks = [
   { name: "Início", path: "/" },
   { name: "Cultos", path: "/cultos" },
   { name: "Estudos Bíblicos", path: "/estudos" },
+  { 
+    name: "Nossa História", 
+    path: "/nossa-historia",
+    submenu: [
+      { name: "20 Anos de Ministério", path: "/nossa-historia/20-anos" },
+      { name: "O Início", path: "/nossa-historia/o-inicio" },
+    ]
+  },
   { name: "Sobre", path: "/sobre" },
   { name: "Contato", path: "/contato" },
 ];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const location = useLocation();
   const { config } = useSiteConfig();
+
+  const isHistoryActive = location.pathname.startsWith("/nossa-historia");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-md shadow-lg">
@@ -42,17 +59,46 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`font-ui text-sm tracking-wide transition-colors duration-300 ${
-                  location.pathname === link.path
-                    ? "text-accent font-medium"
-                    : "text-primary-foreground/80 hover:text-accent"
-                }`}
-              >
-                {link.name}
-              </Link>
+              link.submenu ? (
+                <DropdownMenu key={link.path}>
+                  <DropdownMenuTrigger className={`font-ui text-sm tracking-wide transition-colors duration-300 flex items-center gap-1 outline-none ${
+                    isHistoryActive
+                      ? "text-accent font-medium"
+                      : "text-primary-foreground/80 hover:text-accent"
+                  }`}>
+                    {link.name}
+                    <ChevronDown className="w-4 h-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-card border-border">
+                    {link.submenu.map((sublink) => (
+                      <DropdownMenuItem key={sublink.path} asChild>
+                        <Link
+                          to={sublink.path}
+                          className={`w-full cursor-pointer ${
+                            location.pathname === sublink.path
+                              ? "text-accent font-medium"
+                              : ""
+                          }`}
+                        >
+                          {sublink.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`font-ui text-sm tracking-wide transition-colors duration-300 ${
+                    location.pathname === link.path
+                      ? "text-accent font-medium"
+                      : "text-primary-foreground/80 hover:text-accent"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
           </nav>
 
@@ -80,18 +126,52 @@ const Header = () => {
           <nav className="lg:hidden py-4 border-t border-primary-foreground/10">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`font-ui text-sm py-2 transition-colors ${
-                    location.pathname === link.path
-                      ? "text-accent font-medium"
-                      : "text-primary-foreground/80"
-                  }`}
-                >
-                  {link.name}
-                </Link>
+                link.submenu ? (
+                  <div key={link.path}>
+                    <button
+                      onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+                      className={`font-ui text-sm py-2 transition-colors flex items-center gap-1 w-full ${
+                        isHistoryActive
+                          ? "text-accent font-medium"
+                          : "text-primary-foreground/80"
+                      }`}
+                    >
+                      {link.name}
+                      <ChevronDown className={`w-4 h-4 transition-transform ${isHistoryOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {isHistoryOpen && (
+                      <div className="pl-4 flex flex-col gap-2 mt-2">
+                        {link.submenu.map((sublink) => (
+                          <Link
+                            key={sublink.path}
+                            to={sublink.path}
+                            onClick={() => setIsMenuOpen(false)}
+                            className={`font-ui text-sm py-1 transition-colors ${
+                              location.pathname === sublink.path
+                                ? "text-accent font-medium"
+                                : "text-primary-foreground/70"
+                            }`}
+                          >
+                            {sublink.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`font-ui text-sm py-2 transition-colors ${
+                      location.pathname === link.path
+                        ? "text-accent font-medium"
+                        : "text-primary-foreground/80"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
               <Link to="/ao-vivo" onClick={() => setIsMenuOpen(false)}>
                 <Button variant="gold" size="default" className="w-full gap-2">
