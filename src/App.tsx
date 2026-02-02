@@ -12,13 +12,13 @@ import EstudoDetail from "./pages/EstudoDetail";
 import Sobre from "./pages/Sobre";
 import AoVivo from "./pages/AoVivo";
 import Contato from "./pages/Contato";
-import VinteAnosMinisterio from "./pages/VinteAnosMinisterio";
-import OInicio from "./pages/OInicio";
+import DynamicPage from "./pages/DynamicPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminLayout from "./pages/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminCultos from "./pages/AdminCultos";
 import AdminEstudos from "./pages/AdminEstudos";
+import AdminPaginas from "./pages/AdminPaginas";
 import AdminAgenda from "./pages/AdminAgenda";
 import AdminConfiguracoes from "./pages/AdminConfiguracoes";
 import NotFound from "./pages/NotFound";
@@ -41,8 +41,7 @@ const App = () => (
             <Route path="/sobre" element={<Sobre />} />
             <Route path="/ao-vivo" element={<AoVivo />} />
             <Route path="/contato" element={<Contato />} />
-            <Route path="/nossa-historia/20-anos" element={<VinteAnosMinisterio />} />
-            <Route path="/nossa-historia/o-inicio" element={<OInicio />} />
+            <Route path="/pagina/:slug" element={<DynamicPage />} />
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -50,6 +49,7 @@ const App = () => (
               <Route index element={<AdminDashboard />} />
               <Route path="cultos" element={<AdminCultos />} />
               <Route path="estudos" element={<AdminEstudos />} />
+              <Route path="paginas" element={<AdminPaginas />} />
               <Route path="agenda" element={<AdminAgenda />} />
               <Route path="configuracoes" element={<AdminConfiguracoes />} />
             </Route>

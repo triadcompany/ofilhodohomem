@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Menu, X, Play, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { useMenuPages } from "@/hooks/usePages";
 import logoImage from "@/assets/logo.png";
 import {
   DropdownMenu,
@@ -11,29 +12,86 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const navLinks = [
+interface NavLink {
+  name: string;
+  path: string;
+  submenu?: { name: string; path: string }[];
+}
+
+const staticNavLinks: NavLink[] = [
   { name: "Início", path: "/" },
   { name: "Cultos", path: "/cultos" },
   { name: "Estudos Bíblicos", path: "/estudos" },
-  { 
-    name: "Nossa História", 
-    path: "/nossa-historia",
-    submenu: [
-      { name: "20 Anos de Ministério", path: "/nossa-historia/20-anos" },
-      { name: "O Início", path: "/nossa-historia/o-inicio" },
-    ]
-  },
   { name: "Sobre", path: "/sobre" },
   { name: "Contato", path: "/contato" },
 ];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
   const location = useLocation();
   const { config } = useSiteConfig();
+  const { data: dynamicPages = [] } = useMenuPages();
 
-  const isHistoryActive = location.pathname.startsWith("/nossa-historia");
+  // Build navigation links with dynamic pages
+  const navLinks = useMemo(() => {
+    const links: NavLink[] = [...staticNavLinks];
+    
+    // Group dynamic pages by parent_menu
+    const groupedPages: Record<string, { name: string; path: string }[]> = {};
+    const standalonePages: { name: string; path: string }[] = [];
+
+    dynamicPages.forEach((page) => {
+      if (page.parent_menu) {
+        if (!groupedPages[page.parent_menu]) {
+          groupedPages[page.parent_menu] = [];
+        }
+        groupedPages[page.parent_menu].push({
+          name: page.title,
+          path: `/pagina/${page.slug}`,
+        });
+      } else {
+        standalonePages.push({
+          name: page.title,
+          path: `/pagina/${page.slug}`,
+        });
+      }
+    });
+
+    // Insert grouped pages as dropdown menus after "Estudos Bíblicos"
+    const insertIndex = links.findIndex((l) => l.name === "Estudos Bíblicos") + 1;
+    
+    Object.entries(groupedPages).forEach(([menuName, subPages], idx) => {
+      links.splice(insertIndex + idx, 0, {
+        name: menuName,
+        path: `#${menuName}`,
+        submenu: subPages,
+      });
+    });
+
+    // Add standalone pages before "Sobre"
+    standalonePages.forEach((page) => {
+      const sobreIndex = links.findIndex((l) => l.name === "Sobre");
+      if (sobreIndex !== -1) {
+        links.splice(sobreIndex, 0, page);
+      } else {
+        links.push(page);
+      }
+    });
+
+    return links;
+  }, [dynamicPages]);
+
+  const toggleSubmenu = (menuName: string) => {
+    setOpenSubmenus((prev) => ({
+      ...prev,
+      [menuName]: !prev[menuName],
+    }));
+  };
+
+  const isSubmenuActive = (submenu: { name: string; path: string }[]) => {
+    return submenu.some((item) => location.pathname === item.path);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-md shadow-lg">
@@ -41,8 +99,8 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <img 
-              src={logoImage} 
+            <img
+              src={logoImage}
               alt={`${config.church_name} logo`}
               className="w-12 h-12 rounded-full object-cover"
             />
@@ -58,14 +116,16 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link) =>
               link.submenu ? (
                 <DropdownMenu key={link.path}>
-                  <DropdownMenuTrigger className={`font-ui text-sm tracking-wide transition-colors duration-300 flex items-center gap-1 outline-none ${
-                    isHistoryActive
-                      ? "text-accent font-medium"
-                      : "text-primary-foreground/80 hover:text-accent"
-                  }`}>
+                  <DropdownMenuTrigger
+                    className={`font-ui text-sm tracking-wide transition-colors duration-300 flex items-center gap-1 outline-none ${
+                      isSubmenuActive(link.submenu)
+                        ? "text-accent font-medium"
+                        : "text-primary-foreground/80 hover:text-accent"
+                    }`}
+                  >
                     {link.name}
                     <ChevronDown className="w-4 h-4" />
                   </DropdownMenuTrigger>
@@ -99,7 +159,7 @@ const Header = () => {
                   {link.name}
                 </Link>
               )
-            ))}
+            )}
           </nav>
 
           {/* Live Button */}
@@ -125,21 +185,25 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="lg:hidden py-4 border-t border-primary-foreground/10">
             <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
+              {navLinks.map((link) =>
                 link.submenu ? (
                   <div key={link.path}>
                     <button
-                      onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+                      onClick={() => toggleSubmenu(link.name)}
                       className={`font-ui text-sm py-2 transition-colors flex items-center gap-1 w-full ${
-                        isHistoryActive
+                        isSubmenuActive(link.submenu)
                           ? "text-accent font-medium"
                           : "text-primary-foreground/80"
                       }`}
                     >
                       {link.name}
-                      <ChevronDown className={`w-4 h-4 transition-transform ${isHistoryOpen ? "rotate-180" : ""}`} />
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          openSubmenus[link.name] ? "rotate-180" : ""
+                        }`}
+                      />
                     </button>
-                    {isHistoryOpen && (
+                    {openSubmenus[link.name] && (
                       <div className="pl-4 flex flex-col gap-2 mt-2">
                         {link.submenu.map((sublink) => (
                           <Link
@@ -172,7 +236,7 @@ const Header = () => {
                     {link.name}
                   </Link>
                 )
-              ))}
+              )}
               <Link to="/ao-vivo" onClick={() => setIsMenuOpen(false)}>
                 <Button variant="gold" size="default" className="w-full gap-2">
                   <Play className="w-4 h-4" />

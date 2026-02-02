@@ -7,7 +7,8 @@ import {
   Calendar,
   Settings,
   LogOut,
-  ExternalLink
+  ExternalLink,
+  FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -15,6 +16,7 @@ const menuItems = [
   { name: "Dashboard", path: "/admin", icon: Home },
   { name: "Cultos", path: "/admin/cultos", icon: Video },
   { name: "Estudos Bíblicos", path: "/admin/estudos", icon: BookOpen },
+  { name: "Páginas", path: "/admin/paginas", icon: FileText },
   { name: "Agenda", path: "/admin/agenda", icon: Calendar },
   { name: "Configurações", path: "/admin/configuracoes", icon: Settings },
 ];
