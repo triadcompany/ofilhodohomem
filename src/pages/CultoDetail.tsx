@@ -143,10 +143,8 @@ const CultoDetail = () => {
 
             {/* Description */}
             {culto.description && (
-              <div className="prose max-w-none mb-12">
-                <p className="font-body text-lg text-muted-foreground leading-relaxed">
-                  {culto.description}
-                </p>
+              <div className="prose prose-lg max-w-none mb-12 prose-headings:font-display prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:text-muted-foreground">
+                <div dangerouslySetInnerHTML={{ __html: culto.description }} />
               </div>
             )}
 
@@ -161,30 +159,23 @@ const CultoDetail = () => {
                     Resumo do Culto
                   </h2>
                 </div>
-                <p className="font-body text-muted-foreground leading-relaxed">
-                  {culto.summary}
-                </p>
+                <div 
+                  className="prose prose-base max-w-none prose-headings:font-display prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: culto.summary }} 
+                />
               </div>
             )}
 
             {/* Teachings */}
-            {culto.teachings && culto.teachings.length > 0 && (
+            {culto.teachings && culto.teachings.length > 0 && culto.teachings[0] && (
               <div className="bg-primary/5 rounded-xl p-8">
                 <h2 className="font-display text-xl font-semibold text-foreground mb-6">
                   Principais Ensinamentos
                 </h2>
-                <ul className="space-y-4">
-                  {culto.teachings.map((teaching, index) => (
-                    <li key={index} className="flex items-start gap-4">
-                      <span className="w-8 h-8 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-ui text-sm font-semibold shrink-0">
-                        {index + 1}
-                      </span>
-                      <p className="font-body text-muted-foreground pt-1">
-                        {teaching}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                <div 
+                  className="prose prose-base max-w-none prose-headings:font-display prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:text-muted-foreground prose-ol:list-decimal prose-ul:list-disc"
+                  dangerouslySetInnerHTML={{ __html: culto.teachings[0] }} 
+                />
               </div>
             )}
           </div>
