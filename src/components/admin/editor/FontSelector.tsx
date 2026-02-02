@@ -12,7 +12,7 @@ interface FontSelectorProps {
 }
 
 const FONTS = [
-  { name: "Padrão", value: "" },
+  { name: "Padrão", value: "default" },
   { name: "Arial", value: "Arial" },
   { name: "Georgia", value: "Georgia" },
   { name: "Times New Roman", value: "Times New Roman" },
@@ -23,10 +23,10 @@ const FONTS = [
 ];
 
 export const FontSelector = ({ editor }: FontSelectorProps) => {
-  const currentFont = editor.getAttributes("textStyle").fontFamily || "";
+  const currentFont = editor.getAttributes("textStyle").fontFamily || "default";
 
   const handleFontChange = (value: string) => {
-    if (value === "") {
+    if (value === "default") {
       editor.chain().focus().unsetFontFamily().run();
     } else {
       editor.chain().focus().setFontFamily(value).run();
