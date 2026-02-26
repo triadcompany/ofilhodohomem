@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Play, Video, BookOpen, Users, Radio, ArrowRight, Clock, MapPin, Calendar } from "lucide-react";
+import { parseLocalDate } from "@/lib/dateUtils";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -214,7 +215,7 @@ const Index = () => {
                 <div className="lg:col-span-2 p-8 lg:p-10 flex flex-col justify-center bg-card">
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 text-accent text-xs font-ui font-semibold rounded-full w-fit mb-4">
                     <Calendar className="w-3.5 h-3.5" />
-                    {new Date(featuredCulto.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
+                    {parseLocalDate(featuredCulto.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
                   </span>
                   <h3 className="font-display text-2xl lg:text-3xl font-bold text-foreground mb-4 leading-tight">
                     {featuredCulto.title}

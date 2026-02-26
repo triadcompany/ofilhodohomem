@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { parseLocalDate } from "@/lib/dateUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { Video, BookOpen, Calendar, TrendingUp, ArrowRight, Plus } from "lucide-react";
 import { motion } from "framer-motion";
@@ -165,7 +166,7 @@ const AdminDashboard = () => {
                     {culto.title}
                   </p>
                   <p className="font-ui text-xs text-muted-foreground mt-0.5">
-                    {new Date(culto.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                    {parseLocalDate(culto.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                   </p>
                 </div>
                 <span className={`px-2.5 py-1 rounded-full text-[10px] font-ui font-semibold uppercase tracking-wider ${

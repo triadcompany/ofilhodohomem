@@ -1,4 +1,5 @@
 import { Play } from "lucide-react";
+import { parseLocalDate } from "@/lib/dateUtils";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +14,7 @@ interface CultoCardProps {
 
 const CultoCard = ({ id, title, date, description, thumbnail_url, isFeatured }: CultoCardProps) => {
   const thumbnail = thumbnail_url || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&h=450&fit=crop";
-  const formattedDate = new Date(date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+  const formattedDate = parseLocalDate(date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 
   if (isFeatured) {
     return (

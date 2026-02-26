@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { parseLocalDate } from "@/lib/dateUtils";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -249,7 +250,7 @@ const AdminCultos = () => {
                   {culto.title}
                 </h3>
                 <p className="font-ui text-sm text-muted-foreground">
-                  {new Date(culto.date).toLocaleDateString("pt-BR")}
+                  {parseLocalDate(culto.date).toLocaleDateString("pt-BR")}
                 </p>
                 {!culto.published && (
                   <span className="inline-block mt-1 px-2 py-0.5 bg-muted text-muted-foreground text-xs font-ui rounded">
