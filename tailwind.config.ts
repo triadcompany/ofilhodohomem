@@ -66,9 +66,9 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Cinzel', 'serif'],
-        body: ['Lora', 'serif'],
-        ui: ['Inter', 'sans-serif'],
+        display: ['Poppins', 'sans-serif'],
+        body: ['Poppins', 'sans-serif'],
+        ui: ['Poppins', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
