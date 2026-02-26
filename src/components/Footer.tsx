@@ -107,8 +107,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex items-center justify-between">
-          <p className="font-ui text-xs text-primary-foreground/50">
+        <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-ui text-xs text-primary-foreground/50 text-center sm:text-left">
             © {new Date().getFullYear()} {config.church_name} {config.church_subtitle}. Todos os direitos reservados.
           </p>
           <button

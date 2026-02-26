@@ -228,4 +228,25 @@
       transform: scale(1);
     }
   }
+
+  /* Hide scrollbar for filter rows */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Better touch targets on mobile */
+  @media (max-width: 768px) {
+    .prose {
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+    
+    .prose img {
+      border-radius: 0.75rem;
+    }
+  }
 }

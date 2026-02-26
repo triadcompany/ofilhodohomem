@@ -79,13 +79,13 @@ const Index = () => {
               custom={1}
               className="font-display text-primary-foreground tracking-tight mb-4 leading-[0.95]"
             >
-              <span className="block text-2xl md:text-3xl lg:text-4xl font-semibold mb-2 bg-gradient-to-r from-accent via-church-gold-light to-accent bg-clip-text text-transparent">{config.hero_title}</span>
-              <span className="block text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-church-gold-light to-accent bg-clip-text text-transparent">{config.hero_subtitle}</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold mb-2 bg-gradient-to-r from-accent via-church-gold-light to-accent bg-clip-text text-transparent">{config.hero_title}</span>
+              <span className="block text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-church-gold-light to-accent bg-clip-text text-transparent">{config.hero_subtitle}</span>
             </motion.h1>
             <motion.div
               variants={fadeInUp}
               custom={3}
-              className="max-w-lg mx-auto mb-12 p-6 rounded-2xl bg-primary-foreground/5 backdrop-blur-sm border border-primary-foreground/10"
+              className="max-w-lg mx-auto mb-8 md:mb-12 p-4 md:p-6 rounded-2xl bg-primary-foreground/5 backdrop-blur-sm border border-primary-foreground/10"
             >
               <p className="font-body text-base md:text-lg text-primary-foreground/80 italic leading-relaxed">
                 "{config.hero_verse}"
@@ -134,15 +134,15 @@ const Index = () => {
               <motion.div key={item.title} variants={fadeInUp} custom={i}>
                 <Link
                   to={item.link}
-                  className="group relative flex flex-col items-center gap-3 p-6 lg:p-8 rounded-2xl bg-card border border-border/60 shadow-elevated hover:shadow-gold transition-all duration-500 overflow-hidden"
+                  className="group relative flex flex-col items-center gap-2 md:gap-3 p-4 md:p-6 lg:p-8 rounded-2xl bg-card border border-border/60 shadow-elevated hover:shadow-gold transition-all duration-500 overflow-hidden"
                 >
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                  <div className="w-14 h-14 rounded-2xl bg-primary/5 group-hover:bg-accent/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                    <item.icon className="w-7 h-7 text-primary group-hover:text-accent transition-colors" />
+                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-primary/5 group-hover:bg-accent/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    <item.icon className="w-5 h-5 md:w-7 md:h-7 text-primary group-hover:text-accent transition-colors" />
                   </div>
                   <div className="text-center relative">
-                    <h3 className="font-display text-base font-bold text-foreground group-hover:text-accent transition-colors">{item.title}</h3>
-                    <p className="font-body text-xs text-muted-foreground mt-1 hidden sm:block">{item.desc}</p>
+                    <h3 className="font-display text-sm md:text-base font-bold text-foreground group-hover:text-accent transition-colors">{item.title}</h3>
+                    <p className="font-body text-[11px] md:text-xs text-muted-foreground mt-1 hidden sm:block">{item.desc}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-accent opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300" />
                 </Link>
@@ -249,7 +249,7 @@ const Index = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={stagger}
-            className="grid lg:grid-cols-3 gap-10 items-start"
+            className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10 items-start"
           >
             {/* Left column */}
             <motion.div variants={fadeInUp} className="lg:col-span-1">
@@ -273,7 +273,7 @@ const Index = () => {
             </motion.div>
 
             {/* Right column — schedule cards */}
-            <motion.div variants={fadeInUp} custom={2} className="lg:col-span-2 grid sm:grid-cols-2 gap-3">
+            <motion.div variants={fadeInUp} custom={2} className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
               {schedule.map((item, index) => (
                 <motion.div
                   key={index}
@@ -350,7 +350,7 @@ const Index = () => {
           </motion.div>
 
           <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
@@ -380,7 +380,7 @@ const Index = () => {
             viewport={{ once: true }}
             variants={stagger}
           >
-            <motion.h2 variants={fadeInUp} className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-6">
+            <motion.h2 variants={fadeInUp} className="font-display text-3xl sm:text-4xl md:text-6xl font-bold text-primary-foreground mb-6">
               Venha nos Visitar
             </motion.h2>
             <motion.p variants={fadeInUp} custom={1} className="font-body text-lg text-primary-foreground/60 max-w-xl mx-auto mb-10">
