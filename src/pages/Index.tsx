@@ -243,7 +243,7 @@ const Index = () => {
                 <span className="font-ui text-xs font-semibold tracking-widest text-accent uppercase">Programação</span>
               </div>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-                Agenda Semanal
+                Horário dos Cultos
               </h2>
               <p className="font-body text-primary-foreground/60 leading-relaxed mb-8">
                 Confira nossos horários e venha participar de nossos encontros.
