@@ -78,7 +78,7 @@ const Index = () => {
               className="font-display text-primary-foreground tracking-tight mb-4 leading-[0.95]"
             >
               <span className="block text-2xl md:text-3xl lg:text-4xl font-semibold text-primary-foreground/80 mb-2">{config.hero_title}</span>
-              <span className="block text-5xl md:text-7xl lg:text-8xl font-bold">{config.hero_subtitle}</span>
+              <span className="block text-4xl md:text-5xl lg:text-6xl font-bold">{config.hero_subtitle}</span>
             </motion.h1>
             <motion.div
               variants={fadeInUp}
