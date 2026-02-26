@@ -179,23 +179,20 @@ const Index = () => {
             >
               <div className="grid lg:grid-cols-5">
                 {/* Thumbnail */}
-                <div className="lg:col-span-3 relative aspect-video lg:aspect-auto lg:min-h-[420px]">
+                <Link to={`/cultos/${featuredCulto.id}`} className="lg:col-span-3 relative aspect-video lg:aspect-auto lg:min-h-[420px] block overflow-hidden">
                   <img
                     src={featuredCulto.thumbnail_url || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&h=450&fit=crop"}
                     alt={featuredCulto.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-card/80 hidden lg:block" />
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent lg:hidden" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <motion.div
-                      whileHover={{ scale: 1.15 }}
-                      className="w-20 h-20 rounded-full bg-accent/90 backdrop-blur-sm flex items-center justify-center shadow-gold cursor-pointer"
-                    >
+                    <div className="w-20 h-20 rounded-full bg-accent/90 backdrop-blur-sm flex items-center justify-center shadow-gold">
                       <Play className="w-8 h-8 text-accent-foreground ml-1" />
-                    </motion.div>
+                    </div>
                   </div>
-                </div>
+                </Link>
                 {/* Info */}
                 <div className="lg:col-span-2 p-8 lg:p-10 flex flex-col justify-center bg-card">
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 text-accent text-xs font-ui font-semibold rounded-full w-fit mb-4">
