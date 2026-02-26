@@ -296,11 +296,11 @@ const AdminCultos = () => {
       {/* Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+          <DialogHeader className="relative z-10 pb-4 border-b border-border mb-4">
             <DialogTitle className="font-display text-xl">
               {editingCulto ? "Editar Culto" : "Novo Culto"}
             </DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground">
+            <DialogDescription>
               Preencha os dados para {editingCulto ? "atualizar o" : "adicionar um novo"} culto.
             </DialogDescription>
           </DialogHeader>
