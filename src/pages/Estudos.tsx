@@ -7,13 +7,14 @@ import { useEstudos } from "@/hooks/useChurchData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { parseLocalDate } from "@/lib/dateUtils";
 
 const Estudos = () => {
   const { data: estudos = [], isLoading } = useEstudos();
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+      return format(parseLocalDate(dateString), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     } catch {
       return dateString;
     }

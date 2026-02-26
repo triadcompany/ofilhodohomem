@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
+import { parseLocalDate } from "@/lib/dateUtils";
 
 const CultoDetail = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const CultoDetail = () => {
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+      return format(parseLocalDate(dateString), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     } catch {
       return dateString;
     }
