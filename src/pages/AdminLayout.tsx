@@ -7,12 +7,12 @@ const AdminLayout = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-muted/50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <span className="font-display text-accent-foreground text-lg font-bold">T</span>
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <span className="font-display text-primary-foreground text-lg font-bold">T</span>
           </div>
-          <p className="font-ui text-muted-foreground">Carregando...</p>
+          <p className="font-ui text-muted-foreground text-sm">Carregando...</p>
         </div>
       </div>
     );
@@ -24,12 +24,12 @@ const AdminLayout = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-muted/50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="text-center max-w-md">
-          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto mb-6">
             <span className="text-3xl">🔒</span>
           </div>
-          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">
+          <h1 className="font-display text-2xl font-bold text-foreground mb-2">
             Acesso Restrito
           </h1>
           <p className="font-body text-muted-foreground mb-6">
@@ -44,10 +44,12 @@ const AdminLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-muted/50 flex">
+    <div className="min-h-screen bg-background">
       <AdminSidebar />
-      <main className="flex-1 ml-64 p-8">
-        <Outlet />
+      <main className="ml-[260px] transition-all duration-300">
+        <div className="p-8 max-w-7xl mx-auto">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
