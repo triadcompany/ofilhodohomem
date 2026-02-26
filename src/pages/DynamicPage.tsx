@@ -85,20 +85,57 @@ const DynamicPage = () => {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm, remarkBreaks]}
                   rehypePlugins={[rehypeRaw]}
-                  components={{
-                    p: ({ children }) => <p className="mb-6 leading-relaxed">{children}</p>,
-                    h1: ({ children }) => <h1 className="text-3xl font-bold mt-10 mb-6">{children}</h1>,
-                    h2: ({ children }) => <h2 className="text-2xl font-semibold mt-8 mb-4">{children}</h2>,
-                    h3: ({ children }) => <h3 className="text-xl font-medium mt-6 mb-3">{children}</h3>,
-                    ul: ({ children }) => <ul className="list-disc pl-6 mb-6 space-y-2">{children}</ul>,
-                    ol: ({ children }) => <ol className="list-decimal pl-6 mb-6 space-y-2">{children}</ol>,
-                    li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-                    blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-accent pl-6 py-2 my-6 bg-muted/30 rounded-r-lg">
-                        {children}
-                      </blockquote>
-                    ),
-                  }}
+                    components={{
+                      p: ({ children }) => {
+                        // Check if this paragraph contains only a YouTube link
+                        const text = typeof children === 'string' ? children : 
+                          Array.isArray(children) ? children.map(c => (typeof c === 'string' ? c : '')).join('') : '';
+                        const ytMatch = text.trim().match(/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+                        if (ytMatch) {
+                          return (
+                            <div className="my-8 rounded-2xl overflow-hidden shadow-elevated aspect-video">
+                              <iframe
+                                src={`https://www.youtube.com/embed/${ytMatch[1]}`}
+                                title="YouTube video"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full"
+                              />
+                            </div>
+                          );
+                        }
+                        return <p className="mb-6 leading-relaxed">{children}</p>;
+                      },
+                      a: ({ href, children }) => {
+                        // Also handle YouTube links rendered as <a> tags
+                        const ytMatch = href?.match(/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+                        if (ytMatch) {
+                          return (
+                            <div className="my-8 rounded-2xl overflow-hidden shadow-elevated aspect-video">
+                              <iframe
+                                src={`https://www.youtube.com/embed/${ytMatch[1]}`}
+                                title="YouTube video"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full"
+                              />
+                            </div>
+                          );
+                        }
+                        return <a href={href} className="text-accent hover:underline">{children}</a>;
+                      },
+                      h1: ({ children }) => <h1 className="text-3xl font-bold mt-10 mb-6">{children}</h1>,
+                      h2: ({ children }) => <h2 className="text-2xl font-semibold mt-8 mb-4">{children}</h2>,
+                      h3: ({ children }) => <h3 className="text-xl font-medium mt-6 mb-3">{children}</h3>,
+                      ul: ({ children }) => <ul className="list-disc pl-6 mb-6 space-y-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-6 space-y-2">{children}</ol>,
+                      li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-accent pl-6 py-2 my-6 bg-muted/30 rounded-r-lg">
+                          {children}
+                        </blockquote>
+                      ),
+                    }}
                 >
                   {page.content}
                 </ReactMarkdown>
