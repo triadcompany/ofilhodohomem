@@ -1,0 +1,1 @@
+UPDATE cultos SET preacher = 'Pr. Rafael Delmonego' WHERE preacher IS NULL;
