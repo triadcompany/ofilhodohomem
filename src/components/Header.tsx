@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { useMenuPages } from "@/hooks/usePages";
-import logoImage from "@/assets/logo.png";
+import logoImage from "@/assets/logo-ofh.jpg";
 import {
   DropdownMenu,
   DropdownMenuContent,
