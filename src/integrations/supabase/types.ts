@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      anniversary_photos: {
+        Row: {
+          caption: string | null
+          category: string
+          created_at: string
+          display_order: number | null
+          id: string
+          photo_url: string
+        }
+        Insert: {
+          caption?: string | null
+          category?: string
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          photo_url: string
+        }
+        Update: {
+          caption?: string | null
+          category?: string
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          photo_url?: string
+        }
+        Relationships: []
+      }
       church_info: {
         Row: {
           id: string
