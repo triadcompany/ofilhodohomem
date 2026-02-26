@@ -59,6 +59,14 @@ interface Culto {
   preacher: string | null;
 }
 
+const PREACHERS = [
+  "Pr. Rafael Delmonego",
+  "Ir. Renne Costa",
+  "Ir. Rosimar Fiamoncini",
+  "Ir. Juliano da Rocha",
+  "Ir. Joglair Gregolin",
+];
+
 const AdminCultos = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCulto, setEditingCulto] = useState<Culto | null>(null);
@@ -70,7 +78,7 @@ const AdminCultos = () => {
     video_id: "",
     thumbnail_url: "",
     teachings: "",
-    preacher: "",
+    preacher: "Pr. Rafael Delmonego",
     published: true,
   });
 
@@ -143,7 +151,7 @@ const AdminCultos = () => {
       video_id: "",
       thumbnail_url: "",
       teachings: "",
-      preacher: "",
+      preacher: "Pr. Rafael Delmonego",
       published: true,
     });
     setEditingCulto(null);
@@ -321,12 +329,16 @@ const AdminCultos = () => {
 
             <div className="space-y-2">
               <Label htmlFor="preacher">Pregador</Label>
-              <Input
+              <select
                 id="preacher"
                 value={formData.preacher}
                 onChange={(e) => setFormData({ ...formData, preacher: e.target.value })}
-                placeholder="Nome do pregador..."
-              />
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                {PREACHERS.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
