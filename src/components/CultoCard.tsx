@@ -9,10 +9,11 @@ interface CultoCardProps {
   date: string;
   description?: string | null;
   thumbnail_url?: string | null;
+  preacher?: string | null;
   isFeatured?: boolean;
 }
 
-const CultoCard = ({ id, title, date, description, thumbnail_url, isFeatured }: CultoCardProps) => {
+const CultoCard = ({ id, title, date, description, thumbnail_url, preacher, isFeatured }: CultoCardProps) => {
   const thumbnail = thumbnail_url || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&h=450&fit=crop";
   const formattedDate = parseLocalDate(date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 
@@ -72,6 +73,9 @@ const CultoCard = ({ id, title, date, description, thumbnail_url, isFeatured }: 
           {title}
         </h3>
         <p className="font-ui text-sm text-muted-foreground mt-2">{formattedDate}</p>
+        {preacher && (
+          <p className="font-ui text-xs text-accent mt-1">Pregador: {preacher}</p>
+        )}
         {description && (
           <p className="font-body text-sm text-muted-foreground mt-2 line-clamp-2">{description}</p>
         )}

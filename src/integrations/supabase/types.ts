@@ -41,6 +41,7 @@ export type Database = {
           date: string
           description: string | null
           id: string
+          preacher: string | null
           published: boolean | null
           summary: string | null
           teachings: string[] | null
@@ -55,6 +56,7 @@ export type Database = {
           date: string
           description?: string | null
           id?: string
+          preacher?: string | null
           published?: boolean | null
           summary?: string | null
           teachings?: string[] | null
@@ -69,6 +71,7 @@ export type Database = {
           date?: string
           description?: string | null
           id?: string
+          preacher?: string | null
           published?: boolean | null
           summary?: string | null
           teachings?: string[] | null

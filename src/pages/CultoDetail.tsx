@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Share2, Calendar, BookOpen } from "lucide-react";
+import { ArrowLeft, Share2, Calendar, BookOpen, User } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -129,11 +129,17 @@ const CultoDetail = () => {
                 <h1 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-3">
                   {culto.title}
                 </h1>
-                <div className="flex items-center gap-4 text-muted-foreground">
+                <div className="flex items-center gap-4 text-muted-foreground flex-wrap">
                   <span className="flex items-center gap-2 font-ui text-sm">
                     <Calendar className="w-4 h-4" />
                     {formatDate(culto.date)}
                   </span>
+                  {culto.preacher && (
+                    <span className="flex items-center gap-2 font-ui text-sm text-accent">
+                      <User className="w-4 h-4" />
+                      {culto.preacher}
+                    </span>
+                  )}
                 </div>
               </div>
               <Button variant="outline" size="default" onClick={handleShare} className="gap-2">

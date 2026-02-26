@@ -4,14 +4,15 @@ import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
 import CultoCard from "@/components/CultoCard";
 import { Button } from "@/components/ui/button";
-import { useCultos, useCultosYears } from "@/hooks/useChurchData";
+import { useCultos, useCultosYears, useCultosPreachers } from "@/hooks/useChurchData";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Cultos = () => {
   const { data: years = [], isLoading: yearsLoading } = useCultosYears();
+  const { data: preachers = [] } = useCultosPreachers();
   const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
-  
-  // Set the first year when years are loaded
+  const [selectedPreacher, setSelectedPreacher] = useState<string | undefined>(undefined);
+
   useEffect(() => {
     if (years.length > 0 && !selectedYear) {
       setSelectedYear(years[0]);
@@ -19,6 +20,10 @@ const Cultos = () => {
   }, [years, selectedYear]);
 
   const { data: cultos = [], isLoading: cultosLoading } = useCultos(selectedYear);
+
+  const filteredCultos = selectedPreacher
+    ? cultos.filter(c => c.preacher === selectedPreacher)
+    : cultos;
 
   const isLoading = yearsLoading || cultosLoading;
 
@@ -38,9 +43,9 @@ const Cultos = () => {
         </div>
       </section>
 
-      {/* Year Filter */}
+      {/* Filters */}
       <section className="py-8 bg-muted/50 border-b border-border sticky top-20 z-40">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 space-y-3">
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <span className="font-ui text-sm text-muted-foreground mr-2">Filtrar por ano:</span>
             {yearsLoading ? (
@@ -60,6 +65,28 @@ const Cultos = () => {
               <span className="text-sm text-muted-foreground">Nenhum ano disponível</span>
             )}
           </div>
+          {preachers.length > 0 && (
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <span className="font-ui text-sm text-muted-foreground mr-2">Pregador:</span>
+              <Button
+                variant={!selectedPreacher ? "gold" : "outline"}
+                size="sm"
+                onClick={() => setSelectedPreacher(undefined)}
+              >
+                Todos
+              </Button>
+              {preachers.map((preacher) => (
+                <Button
+                  key={preacher}
+                  variant={selectedPreacher === preacher ? "gold" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedPreacher(preacher)}
+                >
+                  {preacher}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -69,7 +96,7 @@ const Cultos = () => {
           <SectionTitle
             subtitle={selectedYear ? `Ano de ${selectedYear}` : "Todos os cultos"}
             title="Mensagens Disponíveis"
-            description={`${cultos.length} culto${cultos.length !== 1 ? "s" : ""} encontrado${cultos.length !== 1 ? "s" : ""}`}
+            description={`${filteredCultos.length} culto${filteredCultos.length !== 1 ? "s" : ""} encontrado${filteredCultos.length !== 1 ? "s" : ""}`}
           />
           {isLoading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -81,9 +108,9 @@ const Cultos = () => {
                 </div>
               ))}
             </div>
-          ) : cultos.length > 0 ? (
+          ) : filteredCultos.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {cultos.map((culto) => (
+              {filteredCultos.map((culto) => (
                 <CultoCard 
                   key={culto.id} 
                   id={culto.id}
@@ -91,13 +118,14 @@ const Cultos = () => {
                   date={culto.date}
                   description={culto.description || undefined}
                   thumbnail_url={culto.thumbnail_url || undefined}
+                  preacher={culto.preacher || undefined}
                 />
               ))}
             </div>
           ) : (
             <div className="text-center py-16">
               <p className="font-body text-muted-foreground">
-                Nenhum culto encontrado para este ano.
+                Nenhum culto encontrado{selectedPreacher ? ` para o pregador ${selectedPreacher}` : ""}.
               </p>
             </div>
           )}
