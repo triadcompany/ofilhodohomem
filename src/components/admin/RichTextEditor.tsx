@@ -90,16 +90,18 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
   }
 
   return (
-    <div className="border border-border rounded-lg overflow-hidden bg-background">
+    <div className="relative border border-border rounded-lg overflow-hidden bg-background">
       <EditorToolbar editor={editor} onSetLink={setLink} />
       
-      <EditorContent editor={editor} />
-      
-      {!value && placeholder && (
-        <div className="absolute top-[60px] left-6 text-muted-foreground pointer-events-none">
-          {placeholder}
-        </div>
-      )}
+      <div className="relative">
+        <EditorContent editor={editor} />
+        
+        {!value && placeholder && (
+          <div className="absolute top-6 left-6 text-muted-foreground pointer-events-none text-sm">
+            {placeholder}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
