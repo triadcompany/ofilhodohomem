@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Play, Video, BookOpen, Users, Radio, ArrowRight, Clock, MapPin, Calendar } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -36,6 +36,7 @@ const Index = () => {
   const { data: recentCultos = [] } = useRecentCultos(3);
   const { config } = useSiteConfig();
   const featuredCulto = recentCultos[0];
+  const [playingFeatured, setPlayingFeatured] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -179,20 +180,36 @@ const Index = () => {
             >
               <div className="grid lg:grid-cols-5">
                 {/* Thumbnail */}
-                <Link to={`/cultos/${featuredCulto.id}`} className="lg:col-span-3 relative aspect-video lg:aspect-auto lg:min-h-[420px] block overflow-hidden">
-                  <img
-                    src={featuredCulto.thumbnail_url || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&h=450&fit=crop"}
-                    alt={featuredCulto.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-card/80 hidden lg:block" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent lg:hidden" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-accent/90 backdrop-blur-sm flex items-center justify-center shadow-gold">
-                      <Play className="w-8 h-8 text-accent-foreground ml-1" />
-                    </div>
-                  </div>
-                </Link>
+                {/* Thumbnail / Video */}
+                <div className="lg:col-span-3 relative aspect-video lg:aspect-auto lg:min-h-[420px] overflow-hidden bg-black">
+                  {playingFeatured && featuredCulto.video_id ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${featuredCulto.video_id}?autoplay=1`}
+                      title={featuredCulto.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="absolute inset-0 w-full h-full"
+                    />
+                  ) : (
+                    <button
+                      onClick={() => setPlayingFeatured(true)}
+                      className="block w-full h-full relative cursor-pointer"
+                    >
+                      <img
+                        src={featuredCulto.thumbnail_url || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&h=450&fit=crop"}
+                        alt={featuredCulto.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-card/80 hidden lg:block" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent lg:hidden" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-20 h-20 rounded-full bg-accent/90 backdrop-blur-sm flex items-center justify-center shadow-gold hover:scale-110 transition-transform">
+                          <Play className="w-8 h-8 text-accent-foreground ml-1" />
+                        </div>
+                      </div>
+                    </button>
+                  )}
+                </div>
                 {/* Info */}
                 <div className="lg:col-span-2 p-8 lg:p-10 flex flex-col justify-center bg-card">
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 text-accent text-xs font-ui font-semibold rounded-full w-fit mb-4">
@@ -207,12 +224,12 @@ const Index = () => {
                       {featuredCulto.description}
                     </p>
                   )}
-                  <Link to={`/cultos/${featuredCulto.id}`}>
+                  <a href={`/cultos/${featuredCulto.id}`} target="_blank" rel="noopener noreferrer">
                     <Button variant="gold" size="lg" className="group/btn rounded-full w-full sm:w-auto">
                       Assistir Agora
                       <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
-                  </Link>
+                  </a>
                 </div>
               </div>
             </motion.div>
