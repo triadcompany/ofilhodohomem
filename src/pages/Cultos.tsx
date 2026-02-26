@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
 import CultoCard from "@/components/CultoCard";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import { useCultos, useCultosYears, useCultosPreachers } from "@/hooks/useChurchData";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -12,6 +14,7 @@ const Cultos = () => {
   const { data: preachers = [] } = useCultosPreachers();
   const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
   const [selectedPreacher, setSelectedPreacher] = useState<string | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (years.length > 0 && !selectedYear) {
@@ -21,9 +24,9 @@ const Cultos = () => {
 
   const { data: cultos = [], isLoading: cultosLoading } = useCultos(selectedYear);
 
-  const filteredCultos = selectedPreacher
-    ? cultos.filter(c => c.preacher === selectedPreacher)
-    : cultos;
+  const filteredCultos = cultos
+    .filter(c => !selectedPreacher || c.preacher === selectedPreacher)
+    .filter(c => !searchQuery || c.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const isLoading = yearsLoading || cultosLoading;
 
@@ -87,6 +90,17 @@ const Cultos = () => {
               ))}
             </div>
           )}
+          <div className="flex items-center justify-center">
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Pesquisar culto pelo título..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
