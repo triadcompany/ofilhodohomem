@@ -10,6 +10,7 @@ import { Plus, Pencil, Trash2, Video } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -285,6 +286,9 @@ const AdminCultos = () => {
             <DialogTitle className="font-display text-xl">
               {editingCulto ? "Editar Culto" : "Novo Culto"}
             </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Preencha os dados para {editingCulto ? "atualizar o" : "adicionar um novo"} culto.
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-4">
