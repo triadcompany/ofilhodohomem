@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -60,9 +60,9 @@
     --shadow-gold: 0 4px 20px -4px hsl(42 85% 55% / 0.4);
 
     /* Typography */
-    --font-display: 'Cinzel', serif;
-    --font-body: 'Lora', serif;
-    --font-ui: 'Inter', sans-serif;
+    --font-display: 'Poppins', sans-serif;
+    --font-body: 'Poppins', sans-serif;
+    --font-ui: 'Poppins', sans-serif;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
