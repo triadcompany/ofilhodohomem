@@ -16,11 +16,7 @@ const Cultos = () => {
   const [selectedPreacher, setSelectedPreacher] = useState<string | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    if (years.length > 0 && !selectedYear) {
-      setSelectedYear(years[0]);
-    }
-  }, [years, selectedYear]);
+  // Start with "Todos" (no year filter)
 
   const { data: cultos = [], isLoading: cultosLoading } = useCultos(selectedYear);
 
@@ -54,16 +50,25 @@ const Cultos = () => {
             {yearsLoading ? (
               <Skeleton className="h-9 w-20" />
             ) : years.length > 0 ? (
-              years.map((year) => (
+              <>
                 <Button
-                  key={year}
-                  variant={selectedYear === year ? "gold" : "outline"}
+                  variant={!selectedYear ? "gold" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedYear(year)}
+                  onClick={() => setSelectedYear(undefined)}
                 >
-                  {year}
+                  Todos
                 </Button>
-              ))
+                {years.map((year) => (
+                  <Button
+                    key={year}
+                    variant={selectedYear === year ? "gold" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedYear(year)}
+                  >
+                    {year}
+                  </Button>
+                ))}
+              </>
             ) : (
               <span className="text-sm text-muted-foreground">Nenhum ano disponível</span>
             )}
