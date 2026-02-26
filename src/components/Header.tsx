@@ -88,13 +88,13 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "h-16" : "h-20"}`}>
+        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "h-14 md:h-16" : "h-16 md:h-20"}`}>
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <motion.img
               src={logoImage}
               alt={`${config.church_name} logo`}
-              className="w-12 h-12 rounded-full object-cover ring-2 ring-accent/20 group-hover:ring-accent/50 transition-all"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover ring-2 ring-accent/20 group-hover:ring-accent/50 transition-all"
               whileHover={{ scale: 1.05 }}
             />
             <div className="hidden sm:block">

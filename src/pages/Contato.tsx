@@ -205,7 +205,7 @@ const Contato = () => {
             </div>
 
             {/* Map */}
-            <div className="h-[600px] lg:h-auto">
+            <div className="h-[350px] md:h-[500px] lg:h-auto">
               <div className="bg-card rounded-xl shadow-card border border-border h-full overflow-hidden">
                 {loading ? (
                   <Skeleton className="w-full h-full min-h-[400px]" />

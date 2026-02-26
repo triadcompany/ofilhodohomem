@@ -43,9 +43,9 @@ const Cultos = () => {
       </section>
 
       {/* Filters */}
-      <section className="py-8 bg-muted/50 border-b border-border sticky top-20 z-40">
+      <section className="py-4 md:py-8 bg-muted/50 border-b border-border sticky top-14 md:top-16 z-40">
         <div className="container mx-auto px-4 space-y-3">
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex items-center justify-start md:justify-center gap-2 md:gap-4 flex-wrap overflow-x-auto pb-1 scrollbar-hide">
             <span className="font-ui text-sm text-muted-foreground mr-2">Filtrar por ano:</span>
             {yearsLoading ? (
               <Skeleton className="h-9 w-20" />
@@ -74,8 +74,8 @@ const Cultos = () => {
             )}
           </div>
           {preachers.length > 0 && (
-            <div className="flex items-center justify-center gap-3 flex-wrap">
-              <span className="font-ui text-sm text-muted-foreground mr-2">Pregador:</span>
+            <div className="flex items-center justify-start md:justify-center gap-2 md:gap-3 flex-wrap overflow-x-auto pb-1 scrollbar-hide">
+              <span className="font-ui text-xs md:text-sm text-muted-foreground mr-1 md:mr-2 shrink-0">Pregador:</span>
               <Button
                 variant={!selectedPreacher ? "gold" : "outline"}
                 size="sm"
@@ -110,7 +110,7 @@ const Cultos = () => {
       </section>
 
       {/* Cultos Grid */}
-      <section className="py-16">
+      <section className="py-8 md:py-16">
         <div className="container mx-auto px-4">
           <SectionTitle
             subtitle={selectedYear ? `Ano de ${selectedYear}` : "Todos os cultos"}
@@ -118,7 +118,7 @@ const Cultos = () => {
             description={`${filteredCultos.length} culto${filteredCultos.length !== 1 ? "s" : ""} encontrado${filteredCultos.length !== 1 ? "s" : ""}`}
           />
           {isLoading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="space-y-4">
                   <Skeleton className="h-48 w-full rounded-lg" />
@@ -128,7 +128,7 @@ const Cultos = () => {
               ))}
             </div>
           ) : filteredCultos.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
               {filteredCultos.map((culto) => (
                 <CultoCard 
                   key={culto.id} 

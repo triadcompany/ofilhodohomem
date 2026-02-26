@@ -60,7 +60,7 @@ const AoVivo = () => {
                   <div className="w-20 h-20 rounded-full bg-primary-foreground/10 flex items-center justify-center mx-auto mb-6">
                     <Radio className="w-10 h-10 text-primary-foreground/50" />
                   </div>
-                  <h2 className="font-display text-2xl md:text-3xl font-semibold text-primary-foreground mb-4">
+                  <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-semibold text-primary-foreground mb-4">
                     Nenhuma transmissão no momento
                   </h2>
                   <p className="font-body text-primary-foreground/70 max-w-md mx-auto mb-6">
@@ -98,7 +98,7 @@ const AoVivo = () => {
               {schedule.map((item, index) => (
                 <div
                   key={index}
-                  className={`flex items-center gap-4 p-5 ${
+                  className={`flex items-center gap-3 md:gap-4 p-4 md:p-5 ${
                     index !== schedule.length - 1 ? "border-b border-border" : ""
                   }`}
                 >
