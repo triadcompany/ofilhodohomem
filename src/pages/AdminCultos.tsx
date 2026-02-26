@@ -56,6 +56,7 @@ interface Culto {
   thumbnail_url: string | null;
   teachings: string[] | null;
   published: boolean | null;
+  preacher: string | null;
 }
 
 const AdminCultos = () => {
@@ -69,6 +70,7 @@ const AdminCultos = () => {
     video_id: "",
     thumbnail_url: "",
     teachings: "",
+    preacher: "",
     published: true,
   });
 
@@ -141,6 +143,7 @@ const AdminCultos = () => {
       video_id: "",
       thumbnail_url: "",
       teachings: "",
+      preacher: "",
       published: true,
     });
     setEditingCulto(null);
@@ -160,6 +163,7 @@ const AdminCultos = () => {
       video_id: videoUrl,
       thumbnail_url: culto.thumbnail_url || "",
       teachings: culto.teachings?.[0] || "",
+      preacher: culto.preacher || "",
       published: culto.published ?? true,
     });
     setIsDialogOpen(true);
@@ -179,6 +183,7 @@ const AdminCultos = () => {
       video_id: videoId || null,
       thumbnail_url: formData.thumbnail_url || null,
       teachings: formData.teachings ? [formData.teachings] : null,
+      preacher: formData.preacher || null,
       published: formData.published,
     };
 
@@ -312,6 +317,16 @@ const AdminCultos = () => {
                   required
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="preacher">Pregador</Label>
+              <Input
+                id="preacher"
+                value={formData.preacher}
+                onChange={(e) => setFormData({ ...formData, preacher: e.target.value })}
+                placeholder="Nome do pregador..."
+              />
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">

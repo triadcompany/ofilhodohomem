@@ -12,6 +12,7 @@ export interface Culto {
   teachings: string[] | null;
   year: number | null;
   published: boolean | null;
+  preacher: string | null;
 }
 
 export interface Estudo {
@@ -84,6 +85,21 @@ export const useCultosYears = () => {
       
       const years = [...new Set(data?.map(c => c.year).filter(Boolean))] as number[];
       return years;
+    },
+  });
+};
+
+export const useCultosPreachers = () => {
+  return useQuery({
+    queryKey: ["cultos-preachers"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("cultos")
+        .select("preacher")
+        .eq("published", true);
+      if (error) throw error;
+      const preachers = [...new Set(data?.map(c => c.preacher).filter(Boolean))] as string[];
+      return preachers.sort();
     },
   });
 };

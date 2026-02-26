@@ -1,0 +1,1 @@
+ALTER TABLE public.cultos ADD COLUMN preacher text;
