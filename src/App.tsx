@@ -19,7 +19,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminCultos from "./pages/AdminCultos";
 import AdminEstudos from "./pages/AdminEstudos";
 import AdminPaginas from "./pages/AdminPaginas";
+import AdminFotos from "./pages/AdminFotos";
 import AdminAgenda from "./pages/AdminAgenda";
+import GaleriaFotos from "./pages/GaleriaFotos";
 import AdminConfiguracoes from "./pages/AdminConfiguracoes";
 import NotFound from "./pages/NotFound";
 
@@ -42,6 +44,7 @@ const App = () => (
             <Route path="/ao-vivo" element={<AoVivo />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/pagina/:slug" element={<DynamicPage />} />
+            <Route path="/galeria-fotos" element={<GaleriaFotos />} />
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -50,6 +53,7 @@ const App = () => (
               <Route path="cultos" element={<AdminCultos />} />
               <Route path="estudos" element={<AdminEstudos />} />
               <Route path="paginas" element={<AdminPaginas />} />
+              <Route path="fotos" element={<AdminFotos />} />
               <Route path="agenda" element={<AdminAgenda />} />
               <Route path="configuracoes" element={<AdminConfiguracoes />} />
             </Route>

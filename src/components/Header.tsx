@@ -57,6 +57,10 @@ const Header = () => {
 
     const insertIndex = links.findIndex((l) => l.name === "Estudos Bíblicos") + 1;
     Object.entries(groupedPages).forEach(([menuName, subPages], idx) => {
+      // Add "Galeria de Fotos" under "Nossa História" menu
+      if (menuName === "Nossa História") {
+        subPages.push({ name: "Galeria de Fotos", path: "/galeria-fotos" });
+      }
       links.splice(insertIndex + idx, 0, { name: menuName, path: `#${menuName}`, submenu: subPages });
     });
 

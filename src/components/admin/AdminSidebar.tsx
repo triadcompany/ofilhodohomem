@@ -10,6 +10,7 @@ import {
   LogOut,
   ExternalLink,
   FileText,
+  ImageIcon,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -21,6 +22,7 @@ const menuItems = [
   { name: "Cultos", path: "/admin/cultos", icon: Video },
   { name: "Estudos Bíblicos", path: "/admin/estudos", icon: BookOpen },
   { name: "Páginas", path: "/admin/paginas", icon: FileText },
+  { name: "Galeria Fotos", path: "/admin/fotos", icon: ImageIcon },
   { name: "Agenda", path: "/admin/agenda", icon: Calendar },
   { name: "Configurações", path: "/admin/configuracoes", icon: Settings },
 ];
